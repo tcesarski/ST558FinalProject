@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Taylor Cesarski">
+
+<title>ST 558 Final Project EDA Document</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="EDA_files/libs/clipboard/clipboard.min.js"></script>
+<script src="EDA_files/libs/quarto-html/quarto.js"></script>
+<script src="EDA_files/libs/quarto-html/popper.min.js"></script>
+<script src="EDA_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="EDA_files/libs/quarto-html/anchor.min.js"></script>
+<link href="EDA_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="EDA_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="EDA_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="EDA_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="EDA_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ST 558 Final Project EDA Document</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Taylor Cesarski </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>The Diabetes_binary column takes on 3 values: 0 for no diabetes, 1 for prediabetes, and 2 for diabetes.</p>
+<p>The HighBP column takes on 2 values: 0 for no high blood pressure and 1 for high blood pressure.</p>
+<p>The HighChol column takes on 2 values: 0 for no high cholesterol and 1 for high cholesterol.</p>
+<p>The CholCheck column takes on 2 values: 0 for no cholesterol check in the last five years and 1 for cholesterol check in the last five years.</p>
+<p>The BMI column is the body mass index.</p>
+<p>The Smoker column takes on 2 values: 0 for having not smoked at least 100 cigarettes in lifetime and 1 for having smoked at least 100 cigarettes in lifetime.</p>
+<p>The Stroke column takes on 2 values: 0 for never had a stroke and 1 for had a stroke.</p>
+<p>The HeartDiseaseorAttack column takes on 2 values: 0 if no coronary heart disease or myocardial infarction and 1 if have coronary heart disease or myocardial infarction.</p>
+<p>The PhysActivity column takes on 2 values: 0 if no physical activity in last 30 days outside of job and 1 if physical activity in last 30 days outside of job.</p>
+<p>The Fruits column takes on 2 values: 0 if don’t consume fruit at least once per day and 1 if consumes fruit at least once per day.</p>
+<p>The Veggies column takes on 2 values: 0 if don’t consume vegetables at least once per day and 1 if consumes vegetables at least once per day.</p>
+<p>The HvyAlcoholConsump column takes on 2 values: 0 if man with less than 14 drinks per week or woman with less than 7 drinks per week or 1 if man with greater than or equal to 14 drinks/week and female with greater than or equal to 7 drinks per week.</p>
+<p>The AnyHealthcare column takes on 2 values: 0 if no health coverage and 1 if health coverage.</p>
+<p>The NoDocbcCost column takes on 2 values: 0 if didn’t refuse doctor because of cost and 1 if refused doctor because of cost.</p>
+<p>The GenHlth column takes on 5 values based on rating of general health: 1 is excellent, 2 is very good, 3 good, 4 is fair, and 5 is poor.</p>
+<p>The MentHlth column represents the days of poor mental health 1-30.</p>
+<p>The PhysHlth column represents the days of physical illness or injury 1-30.</p>
+<p>The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or walking and 1 if difficulty climbing stairs or walking.</p>
+<p>The Sex column takes on 2 values: 0 if female and 1 if male.</p>
+<p>The Age column takes on 13 values: 1: 18-24 2: 25-29 3: 30-34 4: 35-39 5: 40-44 6: 45-49 7: 50-54 8: 55-59 9: 60-64 10: 65-69 11: 70-74 12: 75-79 13: 80+</p>
+<p>The Education column takes on 6 values: 1: no school 2: elementary</p>
+<p>The Income column takes on 8 values:</p>
+</section>
+<section id="data" class="level1">
+<h1>Data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>diabetes_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"diabetes_binary_health_indicators_BRFSS2015.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 253680 Columns: 22
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (22): Diabetes_binary, HighBP, HighChol, CholCheck, BMI, Smoker, Stroke,...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>Diabetes_binary <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>Diabetes_binary, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_diabetes"</span>, <span class="st">"prediabetes"</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>HighBP <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>HighBP, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_hbp"</span>, <span class="st">"hbp"</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>HighChol <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>HighChol, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_high_chol"</span>, <span class="st">"high_chol"</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>CholCheck <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>CholCheck, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_chol_check"</span>, <span class="st">"chol_check"</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>Smoker <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>Smoker, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"non_smoker"</span>, <span class="st">"smoker"</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>Stroke <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>Stroke, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_stroke"</span>, <span class="st">"stroke"</span>))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>HeartDiseaseorAttack <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>HeartDiseaseorAttack, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_hd_or_attack"</span>, <span class="st">"hd_or_attack"</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>PhysActivity <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>PhysActivity, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_activity"</span>, <span class="st">"activity"</span>))</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>Fruits <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>Fruits, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_fruits"</span>, <span class="st">"fruits"</span>))</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>Veggies <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>Veggies, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_veggies"</span>, <span class="st">"veggies"</span>))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>HvyAlcoholConsump <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>HvyAlcoholConsump, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_heavy_alc"</span>, <span class="st">"heavy_alc"</span>))</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>AnyHealthcare <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>AnyHealthcare, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_healthcare"</span>, <span class="st">"healthcare"</span>))</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>NoDocbcCost <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>NoDocbcCost, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_cost_issue"</span>, <span class="st">"cost_issue"</span>))</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>GenHlth <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>GenHlth, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"excellent"</span>, <span class="st">"very good"</span>, <span class="st">"good"</span>, <span class="st">"fair"</span>, <span class="st">"poor"</span>))</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>DiffWalk <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>DiffWalk, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_difficulty"</span>, <span class="st">"difficulty"</span>))</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>Sex <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>Sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"female"</span>, <span class="st">"male"</span>))</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>diabetes_data<span class="sc">$</span>Age <span class="ot">&lt;-</span> <span class="fu">factor</span>(diabetes_data<span class="sc">$</span>Age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"18_24"</span>, <span class="st">"25_29"</span>, <span class="st">"30_34"</span>, <span class="st">"35_39"</span>, <span class="st">"40_44"</span>, <span class="st">"45_49"</span>, <span class="st">"50_54"</span>, <span class="st">"55_59"</span>, <span class="st">"60_64"</span>, <span class="st">"65_69"</span>, <span class="st">"70_74"</span>, <span class="st">"75_79"</span>, <span class="st">"80_or_more"</span>))</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="co">#Need to still find Education and Income</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>diabetes_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 253,680 × 22
+   Diabetes_binary HighBP HighChol     CholCheck       BMI Smoker     Stroke   
+   &lt;fct&gt;           &lt;fct&gt;  &lt;fct&gt;        &lt;fct&gt;         &lt;dbl&gt; &lt;fct&gt;      &lt;fct&gt;    
+ 1 no_diabetes     hbp    high_chol    chol_check       40 smoker     no_stroke
+ 2 no_diabetes     no_hbp no_high_chol no_chol_check    25 smoker     no_stroke
+ 3 no_diabetes     hbp    high_chol    chol_check       28 non_smoker no_stroke
+ 4 no_diabetes     hbp    no_high_chol chol_check       27 non_smoker no_stroke
+ 5 no_diabetes     hbp    high_chol    chol_check       24 non_smoker no_stroke
+ 6 no_diabetes     hbp    high_chol    chol_check       25 smoker     no_stroke
+ 7 no_diabetes     hbp    no_high_chol chol_check       30 smoker     no_stroke
+ 8 no_diabetes     hbp    high_chol    chol_check       25 smoker     no_stroke
+ 9 prediabetes     hbp    high_chol    chol_check       30 smoker     no_stroke
+10 no_diabetes     no_hbp no_high_chol chol_check       24 non_smoker no_stroke
+# ℹ 253,670 more rows
+# ℹ 15 more variables: HeartDiseaseorAttack &lt;fct&gt;, PhysActivity &lt;fct&gt;,
+#   Fruits &lt;fct&gt;, Veggies &lt;fct&gt;, HvyAlcoholConsump &lt;fct&gt;, AnyHealthcare &lt;fct&gt;,
+#   NoDocbcCost &lt;fct&gt;, GenHlth &lt;fct&gt;, MentHlth &lt;dbl&gt;, PhysHlth &lt;dbl&gt;,
+#   DiffWalk &lt;fct&gt;, Sex &lt;fct&gt;, Age &lt;fct&gt;, Education &lt;dbl&gt;, Income &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Missing Data</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>missing_vals <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(diabetes_data))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>missing_vals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Diabetes_binary               HighBP             HighChol 
+                   0                    0                    0 
+           CholCheck                  BMI               Smoker 
+                   0                    0                    0 
+              Stroke HeartDiseaseorAttack         PhysActivity 
+                   0                    0                    0 
+              Fruits              Veggies    HvyAlcoholConsump 
+                   0                    0                    0 
+       AnyHealthcare          NoDocbcCost              GenHlth 
+                   0                    0                    0 
+            MentHlth             PhysHlth             DiffWalk 
+                   0                    0                    0 
+                 Sex                  Age            Education 
+                   0                    0                    0 
+              Income 
+                   0 </code></pre>
+</div>
+</div>
+</section>
+<section id="summarizations" class="level1">
+<h1>Summarizations</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with HighBP</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> HighBP, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>hbp_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(HighBP) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>hbp_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  HighBP prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;              &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_hbp              8742      144851                6.04
+2 hbp                26604      108829               24.4 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with HighChol</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> HighChol, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>high_chol_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(HighChol) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>high_chol_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  HighChol     prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                    &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_high_chol             11660      146089                7.98
+2 high_chol                23686      107591               22.0 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with CholCheck</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> CholCheck, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>chol_check_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CholCheck) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>chol_check_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  CholCheck     prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                     &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_chol_check               241        9470                2.54
+2 chol_check                35105      244210               14.4 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Smoker status</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Smoker, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>smoker_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Smoker) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>smoker_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  Smoker     prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                  &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 non_smoker             17029      141257                12.1
+2 smoker                 18317      112423                16.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Stroke</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Stroke, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>stroke_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stroke) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>stroke_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  Stroke    prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                 &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_stroke             32078      243388                13.2
+2 stroke                 3268       10292                31.8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Heart Disease or Attack</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> HeartDiseaseorAttack, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>hd_or_attack_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(HeartDiseaseorAttack) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>hd_or_attack_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  HeartDiseaseorAttack prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                            &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_hd_or_attack                  27468      229787                12.0
+2 hd_or_attack                      7878       23893                33.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Physical Activity</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> PhysActivity, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>activity_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PhysActivity) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>activity_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  PhysActivity prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                    &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_activity              13059       61760                21.1
+2 activity                 22287      191920                11.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Fruits</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Fruits, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-8.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fruit_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Fruits) <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>fruit_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  Fruits    prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                 &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_fruits             14653       92782                15.8
+2 fruits                20693      160898                12.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with CholCheck</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Veggies, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-9.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>veggies_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Veggies) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>veggies_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  Veggies    prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                  &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_veggies              8610       47839                18.0
+2 veggies                26736      205841                13.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Heavy Alcohol Consumption</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> HvyAlcoholConsump, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-10.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>alcohol_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(HvyAlcoholConsump) <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>alcohol_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  HvyAlcoholConsump prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                         &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_heavy_alc                  34514      239424               14.4 
+2 heavy_alc                       832       14256                5.84</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Healthcare</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> AnyHealthcare, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-11.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>healthcare_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AnyHealthcare) <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>healthcare_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  AnyHealthcare prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                     &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_healthcare              1422       12417                11.5
+2 healthcare                33924      241263                14.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with No Doctor because Cost</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> NoDocbcCost, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-12.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>doc_cost_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(NoDocbcCost) <span class="sc">|&gt;</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>doc_cost_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  NoDocbcCost   prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                     &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_cost_issue             31604      232326                13.6
+2 cost_issue                 3742       21354                17.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with General Health</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> GenHlth, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-13.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>general_health_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(GenHlth) <span class="sc">|&gt;</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>general_health_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+  GenHlth   prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                 &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 excellent              1140       45299                2.52
+2 very good              6381       89084                7.16
+3 good                  13457       75646               17.8 
+4 fair                   9790       31570               31.0 
+5 poor                   4578       12081               37.9 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Difficulty Walking</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> DiffWalk, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-14.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>walking_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(DiffWalk) <span class="sc">|&gt;</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>walking_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  DiffWalk      prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;                     &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 no_difficulty             22225      211005                10.5
+2 difficulty                13121       42675                30.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Sex</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Sex, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-15.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>sex_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">|&gt;</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>sex_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  Sex    prediabetes_count total_count prediabetes_percent
+  &lt;fct&gt;              &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1 female             18411      141974                13.0
+2 male               16935      111706                15.2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Education</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Education, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-16.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>edu_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Education) <span class="sc">|&gt;</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>edu_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  Education prediabetes_count total_count prediabetes_percent
+      &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1         1                47         174               27.0 
+2         2              1183        4043               29.3 
+3         3              2296        9478               24.2 
+4         4             11066       62750               17.6 
+5         5             10354       69910               14.8 
+6         6             10400      107325                9.69</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Income</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="EDA_files/figure-html/unnamed-chunk-2-17.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>income_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Income) <span class="sc">|&gt;</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_count =</span> <span class="fu">sum</span>(Diabetes_binary <span class="sc">==</span> <span class="st">"prediabetes"</span>),</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">prediabetes_percent =</span> (prediabetes_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>income_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+  Income prediabetes_count total_count prediabetes_percent
+   &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;               &lt;dbl&gt;
+1      1              2383        9811               24.3 
+2      2              3086       11783               26.2 
+3      3              3568       15994               22.3 
+4      4              4054       20135               20.1 
+5      5              4504       25883               17.4 
+6      6              5291       36470               14.5 
+7      7              5265       43219               12.2 
+8      8              7195       90385                7.96</code></pre>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

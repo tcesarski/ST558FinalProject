@@ -1,0 +1,25 @@
+---
+title: "ST 558 Final Project EDA Document"
+format: html
+author: "Taylor Cesarski"
+---
+
+# Introduction
+
+# logLoss
+
+
+
+# Logistic Regression Models
+
+A logistic regression model is a generalized linear model that has a response that is a success/failure. In this case, 0 represents "failure" which is no diabetes and 1 represents success which is prediabetes. A logistic model uses a logit link (or log(odds)) to connect the average response with a linear function in the parameters.
+
+# Classification Tree
+
+A classification tree is the idea of splitting up the predictor space into regions and having different predictions for each region. For a classification tree specifically, the goal is to predict group membership - no diabetes, prediabetes, or diabetes in this case. We will use the most prevalent class to predict. This method is very easy to understand, we don't need to include interaction terms, we don't need to scale or utilize statistical assumptions.
+
+# Random Forest
+
+A random forest extends the idea of bootstrap aggregation, but uses a random subset of predictors rather than all predictors. It can reduce the variance in comparison to a basic classification tree because you are averaging across trees. 
+
+# Final Model Selection

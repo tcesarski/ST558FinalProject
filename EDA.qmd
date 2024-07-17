@@ -1,0 +1,399 @@
+---
+title: "ST 558 Final Project EDA Document"
+format: html
+author: "Taylor Cesarski"
+---
+
+# Introduction
+
+The Diabetes_binary column takes on 3 values: 0 for no diabetes, 1 for prediabetes, and 2 for diabetes.
+
+The HighBP column takes on 2 values: 0 for no high blood pressure and 1 for high blood pressure.
+
+The HighChol column takes on 2 values: 0 for no high cholesterol and 1 for high cholesterol.
+
+The CholCheck column takes on 2 values: 0 for no cholesterol check in the last five years and 1 for cholesterol check in the last five years.
+
+The BMI column is the body mass index.
+
+The Smoker column takes on 2 values: 0 for having not smoked at least 100 cigarettes in lifetime and 1 for having smoked at least 100 cigarettes in lifetime.
+
+The Stroke column takes on 2 values: 0 for never had a stroke and 1 for had a stroke.
+
+The HeartDiseaseorAttack column takes on 2 values: 0 if no coronary heart disease or myocardial infarction and 1 if have coronary heart disease or myocardial infarction.
+
+The PhysActivity column takes on 2 values: 0 if no physical activity in last 30 days outside of job and 1 if physical activity in last 30 days outside of job.
+
+The Fruits column takes on 2 values: 0 if don't consume fruit at least once per day and 1 if consumes fruit at least once per day.
+
+The Veggies column takes on 2 values: 0 if don't consume vegetables at least once per day and 1 if consumes vegetables at least once per day.
+
+The HvyAlcoholConsump column takes on 2 values: 0 if man with less than 14 drinks per week or woman with less than 7 drinks per week or 1 if man with greater than or equal to 14 drinks/week and female with greater than or equal to 7 drinks per week.
+
+The AnyHealthcare column takes on 2 values: 0 if no health coverage and 1 if health coverage.
+
+The NoDocbcCost column takes on 2 values: 0 if didn't refuse doctor because of cost and 1 if refused doctor because of cost.
+
+The GenHlth column takes on 5 values based on rating of general health: 1 is excellent, 2 is very good, 3 good, 4 is fair, and 5 is poor.
+
+The MentHlth column represents the days of poor mental health 1-30.
+
+The PhysHlth column represents the days of physical illness or injury 1-30.
+
+The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or walking and 1 if difficulty climbing stairs or walking.
+
+The Sex column takes on 2 values: 0 if female and 1 if male.
+
+The Age column takes on 13 values:
+1: 18-24
+2: 25-29
+3: 30-34
+4: 35-39
+5: 40-44
+6: 45-49
+7: 50-54
+8: 55-59
+9: 60-64
+10: 65-69
+11: 70-74
+12: 75-79
+13: 80+
+
+The Education column takes on 6 values:
+1: no school
+2: elementary
+
+
+
+The Income column takes on 8 values:
+
+
+
+
+# Data
+```{r}
+library(tidyverse)
+diabetes_data <- read_csv("diabetes_binary_health_indicators_BRFSS2015.csv")
+
+diabetes_data$Diabetes_binary <- factor(diabetes_data$Diabetes_binary, levels = c(0, 1), labels = c("no_diabetes", "prediabetes"))
+
+diabetes_data$HighBP <- factor(diabetes_data$HighBP, levels = c(0, 1), labels = c("no_hbp", "hbp"))
+
+diabetes_data$HighChol <- factor(diabetes_data$HighChol, levels = c(0, 1), labels = c("no_high_chol", "high_chol"))
+
+diabetes_data$CholCheck <- factor(diabetes_data$CholCheck, levels = c(0, 1), labels = c("no_chol_check", "chol_check"))
+
+diabetes_data$Smoker <- factor(diabetes_data$Smoker, levels = c(0, 1), labels = c("non_smoker", "smoker"))
+
+diabetes_data$Stroke <- factor(diabetes_data$Stroke, levels = c(0, 1), labels = c("no_stroke", "stroke"))
+
+diabetes_data$HeartDiseaseorAttack <- factor(diabetes_data$HeartDiseaseorAttack, levels = c(0, 1), labels = c("no_hd_or_attack", "hd_or_attack"))
+
+diabetes_data$PhysActivity <- factor(diabetes_data$PhysActivity, levels = c(0, 1), labels = c("no_activity", "activity"))
+
+diabetes_data$Fruits <- factor(diabetes_data$Fruits, levels = c(0, 1), labels = c("no_fruits", "fruits"))
+
+diabetes_data$Veggies <- factor(diabetes_data$Veggies, levels = c(0, 1), labels = c("no_veggies", "veggies"))
+
+diabetes_data$HvyAlcoholConsump <- factor(diabetes_data$HvyAlcoholConsump, levels = c(0, 1), labels = c("no_heavy_alc", "heavy_alc"))
+
+diabetes_data$AnyHealthcare <- factor(diabetes_data$AnyHealthcare, levels = c(0, 1), labels = c("no_healthcare", "healthcare"))
+
+diabetes_data$NoDocbcCost <- factor(diabetes_data$NoDocbcCost, levels = c(0, 1), labels = c("no_cost_issue", "cost_issue"))
+
+diabetes_data$GenHlth <- factor(diabetes_data$GenHlth, levels = c(1, 2, 3, 4, 5), labels = c("excellent", "very good", "good", "fair", "poor"))
+
+diabetes_data$DiffWalk <- factor(diabetes_data$DiffWalk, levels = c(0, 1), labels = c("no_difficulty", "difficulty"))
+
+diabetes_data$Sex <- factor(diabetes_data$Sex, levels = c(0, 1), labels = c("female", "male"))
+
+diabetes_data$Age <- factor(diabetes_data$Age, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13), labels = c("18_24", "25_29", "30_34", "35_39", "40_44", "45_49", "50_54", "55_59", "60_64", "65_69", "70_74", "75_79", "80_or_more"))
+
+#Need to still find Education and Income
+
+diabetes_data
+
+#Missing Data
+missing_vals <- colSums(is.na(diabetes_data))
+missing_vals
+
+
+```
+
+# Summarizations
+
+```{r}
+#Bar plot of Diabetes with HighBP
+ggplot(diabetes_data, aes(x = HighBP, fill = Diabetes_binary)) +
+  geom_bar()
+
+hbp_percent <- diabetes_data |>
+  group_by(HighBP) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+hbp_percent
+
+#Bar plot of Diabetes with HighChol
+ggplot(diabetes_data, aes(x = HighChol, fill = Diabetes_binary)) +
+  geom_bar()
+
+high_chol_percent <- diabetes_data |>
+  group_by(HighChol) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+high_chol_percent
+
+#Bar plot of Diabetes with CholCheck
+ggplot(diabetes_data, aes(x = CholCheck, fill = Diabetes_binary)) +
+  geom_bar()
+
+chol_check_percent <- diabetes_data |>
+  group_by(CholCheck) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+chol_check_percent
+
+#BMI
+ggplot(diabetes_data, aes(x = BMI, fill = Diabetes_binary)) +
+  geom_density(alpha = 0.5)
+
+bmi_numeric <- diabetes_data |>
+  group_by(Diabetes_binary) |>
+  summarize(
+    mean_bmi = mean(BMI),
+    median_bmi = median(BMI)
+  )
+bmi_numeric
+
+
+#Bar plot of Diabetes with Smoker status
+ggplot(diabetes_data, aes(x = Smoker, fill = Diabetes_binary)) +
+  geom_bar()
+
+smoker_percent <- diabetes_data |>
+  group_by(Smoker) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+smoker_percent
+
+#Bar plot of Diabetes with Stroke
+ggplot(diabetes_data, aes(x = Stroke, fill = Diabetes_binary)) +
+  geom_bar()
+
+stroke_percent <- diabetes_data |>
+  group_by(Stroke) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+stroke_percent
+
+
+#Bar plot of Diabetes with Heart Disease or Attack
+ggplot(diabetes_data, aes(x = HeartDiseaseorAttack, fill = Diabetes_binary)) +
+  geom_bar()
+
+hd_or_attack_percent <- diabetes_data |>
+  group_by(HeartDiseaseorAttack) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+hd_or_attack_percent
+
+
+#Bar plot of Diabetes with Physical Activity
+ggplot(diabetes_data, aes(x = PhysActivity, fill = Diabetes_binary)) +
+  geom_bar()
+
+activity_percent <- diabetes_data |>
+  group_by(PhysActivity) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+activity_percent
+
+#Bar plot of Diabetes with Fruits
+ggplot(diabetes_data, aes(x = Fruits, fill = Diabetes_binary)) +
+  geom_bar()
+
+fruit_percent <- diabetes_data |>
+  group_by(Fruits) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+fruit_percent
+
+#Bar plot of Diabetes with CholCheck
+ggplot(diabetes_data, aes(x = Veggies, fill = Diabetes_binary)) +
+  geom_bar()
+
+veggies_percent <- diabetes_data |>
+  group_by(Veggies) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+veggies_percent
+
+#Bar plot of Diabetes with Heavy Alcohol Consumption
+ggplot(diabetes_data, aes(x = HvyAlcoholConsump, fill = Diabetes_binary)) +
+  geom_bar()
+
+alcohol_percent <- diabetes_data |>
+  group_by(HvyAlcoholConsump) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+alcohol_percent
+
+#Bar plot of Diabetes with Healthcare
+ggplot(diabetes_data, aes(x = AnyHealthcare, fill = Diabetes_binary)) +
+  geom_bar()
+
+healthcare_percent <- diabetes_data |>
+  group_by(AnyHealthcare) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+healthcare_percent
+
+
+#Bar plot of Diabetes with No Doctor because Cost
+ggplot(diabetes_data, aes(x = NoDocbcCost, fill = Diabetes_binary)) +
+  geom_bar()
+
+doc_cost_percent <- diabetes_data |>
+  group_by(NoDocbcCost) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+doc_cost_percent
+
+#Bar plot of Diabetes with General Health
+ggplot(diabetes_data, aes(x = GenHlth, fill = Diabetes_binary)) +
+  geom_bar()
+
+general_health_percent <- diabetes_data |>
+  group_by(GenHlth) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+general_health_percent
+
+
+#Mental Health Days
+ggplot(diabetes_data, aes(x = MentHlth, fill = Diabetes_binary)) +
+  geom_boxplot()
+
+mental_health_num <- diabetes_data |>
+  group_by(Diabetes_binary) |>
+  summarize(
+    mean_mental_hlth = mean(MentHlth),
+    median_mental_hlth = median(MentHlth)
+  )
+mental_health_num
+
+
+#Physical Illness or Injury in last 30 days
+ggplot(diabetes_data, aes(x = PhysHlth, fill = Diabetes_binary)) +
+  geom_boxplot()
+
+phys_health_num <- diabetes_data |>
+  group_by(Diabetes_binary) |>
+  summarize(
+    mean_mental_hlth = mean(PhysHlth),
+    median_mental_hlth = median(PhysHlth)
+  )
+phys_health_num
+
+#Bar plot of Diabetes with Difficulty Walking
+ggplot(diabetes_data, aes(x = DiffWalk, fill = Diabetes_binary)) +
+  geom_bar()
+
+walking_percent <- diabetes_data |>
+  group_by(DiffWalk) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+walking_percent
+
+
+#Bar plot of Diabetes with Sex
+ggplot(diabetes_data, aes(x = Sex, fill = Diabetes_binary)) +
+  geom_bar()
+
+sex_percent <- diabetes_data |>
+  group_by(Sex) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+sex_percent
+
+
+
+
+#Bar plot of Diabetes with Education
+ggplot(diabetes_data, aes(x = Education, fill = Diabetes_binary)) +
+  geom_bar()
+
+edu_percent <- diabetes_data |>
+  group_by(Education) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+edu_percent
+
+#Bar plot of Diabetes with Income
+ggplot(diabetes_data, aes(x = Income, fill = Diabetes_binary)) +
+  geom_bar()
+
+income_percent <- diabetes_data |>
+  group_by(Income) |>
+  summarize(
+    prediabetes_count = sum(Diabetes_binary == "prediabetes"),
+    total_count = n(),
+    prediabetes_percent = (prediabetes_count / total_count) * 100
+  )
+income_percent
+
+
+
+
+
+
+```
+
