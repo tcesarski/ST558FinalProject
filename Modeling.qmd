@@ -8,7 +8,21 @@ author: "Taylor Cesarski"
 
 # logLoss
 
+# Split the Data
+First we are going to split the data into a training and test set. We do this so that we can evaluate the model on data that wasn't used to fit the model. This helps us not to overfit the model and make sure that the model can generalize to data it hasn't yet seen.
+```{r}
+library(caret)
+#Set the seed at 100 for reproducibility.
+set.seed(100)
 
+#Use the createDataPartition from the caret package. Get 70% of the rows.
+trainIndex <- createDataPartition(diabetes_data$Diabetes_binary, p =0.7, list = FALSE)
+#Assign those 70% to the training dataset.
+diabetes_train <- diabetes_data[trainIndex, ]
+diabetes_train
+#Assign the rows not selected in the trainIndex (30% of data) to the test dataset.
+diabetes_test <- diabetes_data[-trainIndex, ]
+```
 
 # Logistic Regression Models
 
@@ -16,10 +30,60 @@ A logistic regression model is a generalized linear model that has a response th
 
 # Classification Tree
 
-A classification tree is the idea of splitting up the predictor space into regions and having different predictions for each region. For a classification tree specifically, the goal is to predict group membership - no diabetes, prediabetes, or diabetes in this case. We will use the most prevalent class to predict. This method is very easy to understand, we don't need to include interaction terms, we don't need to scale or utilize statistical assumptions.
+A classification tree is the idea of splitting up the predictor space into regions and having different predictions for each region. For a classification tree specifically, the goal is to predict group membership - no diabetes, or prediabetes/diabetes in this case. We will use the most prevalent class to predict. This method is very easy to understand, we don't need to include interaction terms, we don't need to scale, and we don't need to utilize statistical assumptions.
 
+```{r}
+#Set seed for reproducibility.
+set.seed(50)
+trctrl <- trainControl(method = "cv", 
+                       number = 5, 
+                       classProbs = TRUE, 
+                       summaryFunction = mnLogLoss)
+
+#Create the tuneGrid by making a dataframe of the cp parameter that starts at 0, goes to 0.1 and counts by 0.001.
+tune_parameter <- data.frame(cp = seq(0, 0.1, by = 0.001))
+
+
+#Create a classification tree using predictors of HighBP, HighChol, Heart Disease or Attack, General Health Rating, and Difficulty Walking to predict the presence of diabetes.
+#Use rpart for the method.
+#Use the train control defined above (5 fold cross validation) and the tuneGrid defined above.
+
+diabetes_train
+
+class_tree_diabetes <- train(Diabetes_binary ~ HighBP + HighChol + HeartDiseaseorAttack + GenHlth + DiffWalk,
+                    data = diabetes_train,
+                    method = "rpart",
+                    metric = "logLoss",
+                    trControl = trctrl,
+                    tuneGrid = tune_parameter)
+class_tree_diabetes
+```
 # Random Forest
 
 A random forest extends the idea of bootstrap aggregation, but uses a random subset of predictors rather than all predictors. It can reduce the variance in comparison to a basic classification tree because you are averaging across trees. 
+
+```{r}
+#Use rf for the method.
+#Use the train control defined above (repeated 10 fold cross validation) and the tuneGrid is from 1 to 5 because I have chosen five predictors.
+#Set seed for reproducibility and do 3 repeats of 10 fold cross validation.
+set.seed(50)
+trctrl <- trainControl(method = "cv", 
+                       number = 5, 
+                       classProbs = TRUE, 
+                       summaryFunction = mnLogLoss)
+
+
+rf_model_diabetes <- train(Diabetes_binary ~ HighBP + HighChol + HeartDiseaseorAttack + GenHlth + DiffWalk,
+                    data = diabetes_train,
+                    method = "rf",
+                    metric = "logLoss",
+                    trControl = trctrl,
+                    tuneGrid = data.frame(mtry = 1:5))
+
+rf_model_diabetes
+
+```
+
+
 
 # Final Model Selection
