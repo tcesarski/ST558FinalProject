@@ -28,6 +28,64 @@ diabetes_test <- diabetes_data[-trainIndex, ]
 
 A logistic regression model is a generalized linear model that has a response that is a success/failure. In this case, 0 represents "failure" which is no diabetes and 1 represents success which is prediabetes. A logistic model uses a logit link (or log(odds)) to connect the average response with a linear function in the parameters.
 
+### Logistic Model #1
+Use all chosen predictors as main effect terms.
+```{r}
+set.seed(50)
+trctrl <- trainControl(method = "cv", 
+                       number = 5, 
+                       classProbs = TRUE, 
+                       summaryFunction = mnLogLoss)
+
+log_fit_1 <- train(Diabetes_binary ~ HighBP + HighChol + HeartDiseaseorAttack + GenHlth + DiffWalk,
+                   data = diabetes_train,
+                   method = "glm",
+                   family = "binomial",
+                   metric = "logLoss",
+                   preProcess = c("center", "scale"),
+                   trControl = trctrl)
+log_fit_1
+```
+
+### Logistic Model #2
+```{r}
+set.seed(50)
+trctrl <- trainControl(method = "cv", 
+                       number = 5, 
+                       classProbs = TRUE, 
+                       summaryFunction = mnLogLoss)
+
+log_fit_2 <- train(Diabetes_binary ~ HighBP*HighChol + HeartDiseaseorAttack + GenHlth + DiffWalk,
+                   data = diabetes_train,
+                   method = "glm",
+                   family = "binomial",
+                   metric = "logLoss",
+                   preProcess = c("center", "scale"),
+                   trControl = trctrl)
+log_fit_2
+```
+
+### Logistic Model #3
+```{r}
+set.seed(50)
+trctrl <- trainControl(method = "cv", 
+                       number = 5, 
+                       classProbs = TRUE, 
+                       summaryFunction = mnLogLoss)
+
+log_fit_3 <- train(Diabetes_binary ~ HighBP + HighChol*HeartDiseaseorAttack + GenHlth*DiffWalk,
+                   data = diabetes_train,
+                   method = "glm",
+                   family = "binomial",
+                   metric = "logLoss",
+                   preProcess = c("center", "scale"),
+                   trControl = trctrl)
+log_fit_3
+```
+
+
+
+
 # Classification Tree
 
 A classification tree is the idea of splitting up the predictor space into regions and having different predictions for each region. For a classification tree specifically, the goal is to predict group membership - no diabetes, or prediabetes/diabetes in this case. We will use the most prevalent class to predict. This method is very easy to understand, we don't need to include interaction terms, we don't need to scale, and we don't need to utilize statistical assumptions.
