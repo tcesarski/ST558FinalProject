@@ -8,10 +8,8 @@ author: "Taylor Cesarski"
 
 # logLoss
 log loss is calculated using the following formula:
-`-\frac{1}{N} \sum_{i=1}^{N} [y_i \log(p_i) + (1 - y_i) \log(1 - p_i)]`
-
-
-
+![Log Loss Formula](logloss.png)
+When trying to classify, the model first predicts the probability of success. If the probability of success is greater than 0.5, it predicts success. If it is less than 0.5, it predicts failure. Log loss takes into account how far the predicted probability is to the true value (0 or 1). If there is a greater difference between the predicted value and the actual value, then the value of the logloss will be higher. The log loss value for each individual observation is calculated using the formula above (what is inside the summation). Then the average of the log loss score is determined to get the overall log loss score for the model. A lower log loss score indicates a better fit. If the log loss score is 0, it shows that the predicted probabilities match the true outcomes perfectly. The values can range from 0 to infinity. The benefits of log loss is that it not only accounts for accuracy, but also confidence in predictions. In classification, we can use the accuracy metric which is just correct predictions/total predictions. However, this does not give any information about any incorrect predictions being made.
 
 # Read in data
 ```{r}
@@ -134,7 +132,8 @@ log_fit_3 <- train(Diabetes_binary ~ HighBP + HighChol*HeartDiseaseorAttack + Ge
 log_fit_3
 ```
 
-
+## Best Logistic Model 
+Based on the three previous logistic models, Logistic Model #3 appears to be the best with the lowest logloss metric.
 
 
 # Classification Tree
@@ -193,6 +192,28 @@ rf_model_diabetes
 
 ```
 
-
-
 # Final Model Selection
+We will compare all three models on the test set.
+
+```{r}
+#Logistic Model
+library(Metrics)
+actual <- as.numeric(diabetes_test$Diabetes_binary)
+predicted <- predict(log_fit_3, newdata = diabetes_test, type = "prob")
+predicted_diabetes <- predicted$diabetes
+logLoss(actual, predicted_diabetes)
+
+#Classification Tree
+actual <- as.numeric(diabetes_test$Diabetes_binary)
+predicted <- predict(class_tree_diabetes, newdata = diabetes_test, type = "prob")
+predicted_diabetes <- predicted$diabetes
+logLoss(actual, predicted_diabetes)
+
+#Random Forest
+actual <- as.numeric(diabetes_test$Diabetes_binary)
+predicted <- predict(rf_model_diabetes, newdata = diabetes_test, type = "prob")
+predicted_diabetes <- predicted$diabetes
+logLoss(actual, predicted_diabetes)
+
+```
+

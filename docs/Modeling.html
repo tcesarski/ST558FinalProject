@@ -8,7 +8,7 @@
 
 <meta name="author" content="Taylor Cesarski">
 
-<title>ST 558 Final Project EDA Document</title>
+<title>ST 558 Final Project Modeling Document</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ST 558 Final Project EDA Document</h1>
+<h1 class="title">ST 558 Final Project Modeling Document</h1>
 </div>
 
 
@@ -135,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="logloss" class="level1">
 <h1>logLoss</h1>
-<p>log loss is calculated using the following formula: <code>-\frac{1}{N} \sum_{i=1}^{N} [y_i \log(p_i) + (1 - y_i) \log(1 - p_i)]</code></p>
+<p>log loss is calculated using the following formula: <img src="logloss.png" class="img-fluid" alt="Log Loss Formula"> When trying to classify, the model first predicts the probability of success. If the probability of success is greater than 0.5, it predicts success. If it is less than 0.5, it predicts failure. Log loss takes into account how far the predicted probability is to the true value (0 or 1). If there is a greater difference between the predicted value and the actual value, then the value of the logloss will be higher. The log loss value for each individual observation is calculated using the formula above (what is inside the summation). Then the average of the log loss score is determined to get the overall log loss score for the model. A lower log loss score indicates a better fit. If the log loss score is 0, it shows that the predicted probabilities match the true outcomes perfectly. The values can range from 0 to infinity. The benefits of log loss is that it not only accounts for accuracy, but also confidence in predictions. In classification, we can use the accuracy metric which is just correct predictions/total predictions. However, this does not give any information about any incorrect predictions being made.</p>
 </section>
 <section id="read-in-data" class="level1">
 <h1>Read in data</h1>
@@ -363,6 +363,10 @@ Resampling results:
 </div>
 </div>
 </section>
+<section id="best-logistic-model" class="level2">
+<h2 class="anchored" data-anchor-id="best-logistic-model">Best Logistic Model</h2>
+<p>Based on the three previous logistic models, Logistic Model #3 appears to be the best with the lowest logloss metric.</p>
+</section>
 </section>
 <section id="classification-tree" class="level1">
 <h1>Classification Tree</h1>
@@ -579,6 +583,46 @@ The final value used for the model was mtry = 2.</code></pre>
 </section>
 <section id="final-model-selection" class="level1">
 <h1>Final Model Selection</h1>
+<p>We will compare all three models on the test set.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Logistic Model</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'Metrics' was built under R version 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'Metrics'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:caret':
+
+    precision, recall</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>actual <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(diabetes_test<span class="sc">$</span>Diabetes_binary)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(log_fit_3, <span class="at">newdata =</span> diabetes_test, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>predicted_diabetes <span class="ot">&lt;-</span> predicted<span class="sc">$</span>diabetes</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">logLoss</span>(actual, predicted_diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.665681</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Classification Tree</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>actual <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(diabetes_test<span class="sc">$</span>Diabetes_binary)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(class_tree_diabetes, <span class="at">newdata =</span> diabetes_test, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>predicted_diabetes <span class="ot">&lt;-</span> predicted<span class="sc">$</span>diabetes</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">logLoss</span>(actual, predicted_diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.429205</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Random Forest</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>actual <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(diabetes_test<span class="sc">$</span>Diabetes_binary)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model_diabetes, <span class="at">newdata =</span> diabetes_test, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>predicted_diabetes <span class="ot">&lt;-</span> predicted<span class="sc">$</span>diabetes</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">logLoss</span>(actual, predicted_diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] Inf</code></pre>
+</div>
+</div>
 
 
 </section>
