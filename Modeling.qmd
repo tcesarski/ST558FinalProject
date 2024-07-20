@@ -1,5 +1,5 @@
 ---
-title: "ST 558 Final Project EDA Document"
+title: "ST 558 Final Project Modeling Document"
 format: html
 author: "Taylor Cesarski"
 ---
