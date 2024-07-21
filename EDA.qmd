@@ -6,9 +6,9 @@ author: "Taylor Cesarski"
 
 # Introduction
 
-This data set represents predictors of Diabetes. This data set represents 253,680 survey responses to the CDC's Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The dataset is unbalanced, meaning that there are 
+This data set represents predictors of Diabetes. This data set represents 253,680 survey responses to the CDC's Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The dataset is unbalanced, meaning that there are more observations taking on the value of no diabetes vs. diabetes or prediabetes.
 
-The purpose of the EDA that follows is to both visually and numerically explore the relationship of variables to the target variable - the presence of diabetes. Below, I will use bar plots for categorical variables and density plots or boxplots for continuous variables to visually see differences. I will also compare means and medians for continuous variables for those with and without diabetes. For categorical variables, I will calculate and compare the percentage of those that have the predictor variable in those that either have or do not have diabetes.
+The purpose of the EDA that follows is to both visually and numerically explore the relationship of variables to the target variable - the presence of diabetes. Below, I will use bar plots for categorical variables and density plots or box plots for continuous variables to visually see differences. I will also compare means and medians for continuous variables for those with and without diabetes. For categorical variables, I will calculate and compare the percentage of those that have the predictor variable in those that either have or do not have diabetes.
 
 The ultimate goal of modeling is to find the best predictive model (logistic regression, classification tree, and random forest) that can be used in the prediction of the diagnosis of Diabetes. This is beneficial because Diabetes is a very prevalent chronic disease. By using a predictive model, we could potentially provide earlier diagnosis and/or monitor patients that have a higher likelihood of developing Diabetes due to certain risk factors.
 
@@ -23,7 +23,6 @@ The HighChol column takes on 2 values: 0 for no high cholesterol and 1 for high 
 The HeartDiseaseorAttack column takes on 2 values: 0 if no coronary heart disease or myocardial infarction and 1 if have coronary heart disease or myocardial infarction.
 
 The GenHlth column takes on 5 values based on rating of general health: 1 is excellent, 2 is very good, 3 good, 4 is fair, and 5 is poor.
-
 
 The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or walking and 1 if difficulty climbing stairs or walking.
 
@@ -125,7 +124,7 @@ high_chol_percent
 ```
 
 ### Cholesterol Check Summary
-Of those without diabetes, 95.8% have had a cholesterol check in the last five years. Of those with diabetes, 75.3% have had a cholesterol check. This does NOT appear to be a significant predictor.
+Of those without diabetes, 95.8% have had a cholesterol check in the last five years. Of those with diabetes, 99.3% have had a cholesterol check. This does NOT appear to be a significant predictor.
 ```{r}
 #Bar plot of Diabetes with Cholesterol Check.
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = CholCheck)) +
@@ -204,7 +203,7 @@ stroke_percent
 ```
 
 ### Heart Disease or Attack Summary
-Of those without diabetes, 37.7% have high blood pressure. Of those with diabetes, 75.3% have high blook pressure. This does appear to be a significant predictor.
+Of those without diabetes, 7.34% have heart disease or have had a heart attack. Of those with diabetes, 22.3% have heart disease or have had a heart attack. This does appear to be a significant predictor.
 ```{r}
 #Bar plot of Diabetes with Heart Disease or Attack
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = HeartDiseaseorAttack)) +
@@ -300,6 +299,7 @@ alcohol_percent <- diabetes_data |>
     total_count = n(),
     alcohol_percent = (alcohol_count / total_count) * 100
   )
+alcohol_percent
 ```
 
 ### Healthcare  Summary
