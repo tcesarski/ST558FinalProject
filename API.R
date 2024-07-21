@@ -1,37 +1,24 @@
 library(plumber)
-
+library(tidyverse)
+library(caret)
 api_diabetes_data <- read_csv("diabetes_binary_health_indicators_BRFSS2015.csv")
-trControl <- trainControl (method = "cv", number =5)
+api_diabetes_data$Diabetes_binary <- as.factor(api_diabetes_data$Diabetes_binary)
+api_diabetes_data$HighBP <- as.factor(api_diabetes_data$HighBP)
+api_diabetes_data$HighChol <- as.factor(api_diabetes_data$HighChol)
+api_diabetes_data$HeartDiseaseorAttack <- as.factor(api_diabetes_data$HeartDiseaseorAttack)
+api_diabetes_data$GenHlth <- as.factor(api_diabetes_data$GenHlth)
+api_diabetes_data$DiffWalk <- as.factor(api_diabetes_data$DiffWalk)
 
 
-#Set the seed for reproducibility.
-set.seed(50)
-#Use 5 fold cross validation. To use logLoss as a metric later, set classProbs = TRUE and summaryFunction = mnLogLoss.
-trctrl <- trainControl(method = "cv", 
-                       number = 5, 
-                       classProbs = TRUE, 
-                       summaryFunction = mnLogLoss)
+final_model_diabetes <- glm(Diabetes_binary ~ HighBP + HighChol*HeartDiseaseorAttack + GenHlth*DiffWalk,
+                            data = api_diabetes_data,
+                            family = binomial)
 
-#Train the first logistic model using all 5 main effect terms and interaction terms between High Cholesterol and Heart Disease/Attack and an interaction between General Health and Difficulty Walking.
-#Use the training data set.
-#The method is glm (generalized linear model) with family as binomial to fit logistic.
-#Preprocess the data by centering and scaling.
-#Use the train control above to tell the model how to train.
-log_fit_3 <- train(Diabetes_binary ~ HighBP + HighChol*HeartDiseaseorAttack + GenHlth*DiffWalk,
-                   data = diabetes_train,
-                   method = "glm",
-                   family = "binomial",
-                   metric = "logLoss",
-                   preProcess = c("center", "scale"),
-                   trControl = trctrl)
-#Print out information about the model. The logLoss was 0.3327.
-log_fit_3
-
-
-best_diabetes_model <- function(api_diabetes_data) {
-  predictions <- predict(model, newdata = input_data)
-  return(predictions)
-}
+meanHBP <- mean(as.numeric(api_diabetes_data$HighBP) - 1)
+meanChol <- mean(as.numeric(api_diabetes_data$HighChol) - 1)
+meanHD <- mean(as.numeric(api_diabetes_data$HeartDiseaseorAttack) - 1)
+meanGen <- mean(as.numeric(api_diabetes_data$GenHlth) - 1)
+meanWalk <- mean(as.numeric(api_diabetes_data$DiffWalk) - 1)
 
 #Info endpoint
 #* @get /info
@@ -51,17 +38,17 @@ function(){
 #* @param GenHlth General Health Rating
 #* @param DiffWalk Difficulty Walking
 #* @get /pred
-function(HighBP, HighChol, HeartDiseaseorAttack, GenHlth, DiffWalk){
+function(HighBP = meanHBP, 
+         HighChol = meanChol, 
+         HeartDiseaseorAttack = meanHD,
+         GenHlth = meanGen, 
+         DiffWalk = meanWalk){
   
-  HighBP <- factor(HighBP, levels = c(0, 1), labels = c("no_hbp", "hbp"))
-  
-  HighChol <- factor(HighChol, levels = c(0, 1), labels = c("no_high_chol", "high_chol"))
-  
-  HeartDiseaseorAttack <- factor(HeartDiseaseorAttack, levels = c(0, 1), labels = c("no_hd_or_attack", "hd_or_attack"))
-  
-  GenHlth <- factor(GenHlth, levels = c(1, 2, 3, 4, 5), labels = c("excellent", "very_good", "good", "fair", "poor"))
-  
-  DiffWalk <- factor(DiffWalk, levels = c(0, 1), labels = c("no_difficulty", "difficulty"))
+  HighBP <- as.factor(as.integer(HighBP))
+  HighChol <- as.factor(as.integer(HighChol))
+  HeartDiseaseorAttack <- as.factor(as.integer(HeartDiseaseorAttack))
+  GenHlth <- as.factor(as.integer(GenHlth))
+  DiffWalk <- as.factor(as.integer(DiffWalk))
   
   predictors_data <- data.frame(HighBP = HighBP,
                                 HighChol = HighChol,
@@ -69,5 +56,8 @@ function(HighBP, HighChol, HeartDiseaseorAttack, GenHlth, DiffWalk){
                                 GenHlth = GenHlth,
                                 DiffWalk = DiffWalk)
   
-  diabetes_predict <- predict(log_fit_3, newdata = predictors_data, type = "response")
+  diabetes_predict <- predict(final_model_diabetes, newdata = predictors_data, type = "response")
+  
+  return(paste0("The probability of diabetes is ", diabetes_predict))
+  
 }

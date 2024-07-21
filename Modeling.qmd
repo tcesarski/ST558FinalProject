@@ -233,9 +233,13 @@ We will compare all three models on the test set. Based on the test set, it appe
 ```{r}
 #Logistic Model
 library(Metrics)
+#Get actual values. Converts to 1 & 2 so subtract 1 to get 0 and 1.
 actual <- as.numeric(diabetes_test$Diabetes_binary) - 1
+#Use the best logistic model (log_fit_3) to predict the probability of success.
 predicted <- predict(log_fit_3, newdata = diabetes_test, type = "prob")
+#Just get the predicted for diabetes (don't need no_diabetes).
 predicted_diabetes <- predicted$diabetes
+#Use logLoss function from Metrics package to compute logLoss.
 logLoss(actual, predicted_diabetes)
 
 #Classification Tree
@@ -249,6 +253,10 @@ actual <- as.numeric(diabetes_test$Diabetes_binary) - 1
 predicted <- predict(rf_model_diabetes, newdata = diabetes_test, type = "prob")
 predicted_diabetes <- predicted$diabetes
 logLoss(actual, predicted_diabetes)
+
+saveRDS(log_fit_3, file = "log_fit_3.rds")
+
+
 
 ```
 
