@@ -6,7 +6,7 @@ author: "Taylor Cesarski"
 
 # Introduction
 
-This data set represents predictors of Diabetes. This data set represents 253,680 survey responses to the CDC's Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The dataset is unbalanced, meaning that there are more observations taking on the value of no diabetes vs. diabetes or prediabetes.
+This data set represents predictors of Diabetes. This data set represents 253,680 survey responses to the CDC's Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The data set is unbalanced, meaning that there are more observations taking on the value of no diabetes vs. diabetes or prediabetes.
 
 The purpose of the EDA that follows is to both visually and numerically explore the relationship of variables to the target variable - the presence of diabetes. Below, I will use bar plots for categorical variables and density plots or box plots for continuous variables to visually see differences. I will also compare means and medians for continuous variables for those with and without diabetes. For categorical variables, I will calculate and compare the percentage of those that have the predictor variable in those that either have or do not have diabetes.
 
@@ -14,7 +14,7 @@ The ultimate goal of modeling is to find the best predictive model (logistic reg
 
 Based on the EDA that follows, I have identified 5 significant predictors: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking. Information on the target variable and the predictor variables is below.
 
-The Diabetes_binary column takes on 3 values: 0 for no diabetes, 1 for prediabetes or diabetes.
+The Diabetes_binary column takes on 2 values: 0 for no diabetes and 1 for prediabetes or diabetes.
 
 The HighBP column takes on 2 values: 0 for no high blood pressure and 1 for high blood pressure.
 
@@ -28,7 +28,7 @@ The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or wal
 
 
 # Data
-In this section, I will read in the dataset and convert all appropriate variables to factors with relevant level names.
+In this section, I will read in the data set and convert all appropriate variables to factors with relevant level names.
 ```{r, message = FALSE, warning = FALSE}
 library(tidyverse)
 diabetes_data <- read_csv("diabetes_binary_health_indicators_BRFSS2015.csv")
@@ -79,7 +79,6 @@ missing_vals <- colSums(is.na(diabetes_data))
 missing_vals
 
 ```
-
 # Summarizations
 Here I will create graphical and numerical summaries on the variables above. Based on the summaries that follow, I have determined the most important variables in their relationship with Diabetes are: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking.
 

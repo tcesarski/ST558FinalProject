@@ -26,7 +26,7 @@ The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or wal
 log loss is calculated using the following formula:
 ![Log Loss Formula](logloss.png)
 
-When trying to classify, the model first predicts the probability of success. If the probability of success is greater than 0.5, it predicts success. If it is less than 0.5, it predicts failure. Log loss takes into account how far the predicted probability is to the true value (0 or 1). If there is a greater difference between the predicted value and the actual value, then the value of the logloss will be higher. The log loss value for each individual observation is calculated using the formula above (what is inside the summation). Then the average of the log loss score is determined to get the overall log loss score for the model. A lower log loss score indicates a better fit. If the log loss score is 0, it shows that the predicted probabilities match the true outcomes perfectly. The values can range from 0 to infinity. The benefits of log loss is that it not only accounts for accuracy, but also confidence in predictions. In classification, we can use the accuracy metric which is just correct predictions/total predictions. However, this does not give any information about any incorrect predictions being made. By using logloss instead, we take into account both the accuracy and the confidence in predictions. 
+When trying to classify, the model first predicts the probability of success. If the probability of success is greater than 0.5, it predicts success. If it is less than 0.5, it predicts failure. Log loss takes into account how far the predicted probability is to the true value (0 or 1). If there is a greater difference between the predicted value and the actual value, then the value of the logLoss will be higher. The log loss value for each individual observation is calculated using the formula above (what is inside the summation). Then the average of the log loss score is determined to get the overall log loss score for the model. A lower log loss score indicates a better fit. If the log loss score is 0, it shows that the predicted probabilities match the true outcomes perfectly. The values of logLoss can range from 0 to infinity. The benefits of log loss is that it not only accounts for accuracy, but also confidence in predictions. In classification, we can use the accuracy metric which is just correct predictions/total predictions. However, this does not give any information about any incorrect predictions being made. By using logloss instead, we take into account both the accuracy and the confidence in predictions. 
 
 # Read in data
 ```{r, message = FALSE, warning= FALSE}
@@ -90,7 +90,7 @@ diabetes_test <- diabetes_data[-trainIndex, ]
 
 # Logistic Regression Models
 
-A logistic regression model is a generalized linear model that has a response that is a success/failure. In this case, 0 represents "failure" which is no diabetes and 1 represents success which is prediabetes. A logistic model uses a logit link (or log(odds)) to connect the average response with a linear function in the parameters.
+A logistic regression model is a generalized linear model that has a response that is a success/failure. In this case, 0 represents "failure" which is no diabetes and 1 represents success which is diabetes or prediabetes. A logistic model uses a logit link (or log(odds)) to connect the average response with a linear function in the parameters.
 
 ### Logistic Model #1
 Use all chosen predictors as main effect terms.
@@ -217,6 +217,7 @@ trctrl <- trainControl(method = "cv",
 #Create a random forest model using predictors determined by EDA.
 #Use rf for the method.
 #Use the train control defined above (5 fold cross validation) and the tuneGrid from 1 to 5 because there are five predictors.
+
 rf_model_diabetes <- train(Diabetes_binary ~ HighBP + HighChol + HeartDiseaseorAttack + GenHlth + DiffWalk,
                     data = diabetes_train,
                     method = "rf",
@@ -228,14 +229,14 @@ rf_model_diabetes
 ```
 
 # Final Model Selection
-We will compare all three models on the test set. Based on the test set, it appears that is the best model. 
+We will compare all three models on the test set. Based on the test set, it appears that the logistic regression is the best model. On the test set, the logistic model has a log loss of , the classification tree has a logLoss of , and the random forest model has a logLoss of infinity.
 
 ```{r}
 #Logistic Model
 library(Metrics)
 #Get actual values. Converts to 1 & 2 so subtract 1 to get 0 and 1.
 actual <- as.numeric(diabetes_test$Diabetes_binary) - 1
-#Use the best logistic model (log_fit_3) to predict the probability of success.
+#Use the best logistic model (log_fit_3) to predict the probability of success (diabetes).
 predicted <- predict(log_fit_3, newdata = diabetes_test, type = "prob")
 #Just get the predicted for diabetes (don't need no_diabetes).
 predicted_diabetes <- predicted$diabetes
@@ -243,20 +244,24 @@ predicted_diabetes <- predicted$diabetes
 logLoss(actual, predicted_diabetes)
 
 #Classification Tree
+#Get actual values. Converts to 1 & 2 so subtract 1 to get 0 and 1.
 actual <- as.numeric(diabetes_test$Diabetes_binary) - 1
+#Use the classification tree model (class_tree_diabetes) to predict the probability of success (diabetes). 
 predicted <- predict(class_tree_diabetes, newdata = diabetes_test, type = "prob")
+#Just get the predicted for diabetes (don't need no_diabetes).
 predicted_diabetes <- predicted$diabetes
+#Use logLoss function from Metrics package to compute logLoss.
 logLoss(actual, predicted_diabetes)
 
 #Random Forest
+#Get actual values. Converts to 1 & 2 so subtract 1 to get 0 and 1.
 actual <- as.numeric(diabetes_test$Diabetes_binary) - 1
+#Use random forest model (rf_model_diabetes) to predict probability of success (diabetes). 
 predicted <- predict(rf_model_diabetes, newdata = diabetes_test, type = "prob")
+#Just get the predicted for diabetes (don't need no_diabetes).
 predicted_diabetes <- predicted$diabetes
+#Use logLoss function from Metrics package to computer logLoss.
 logLoss(actual, predicted_diabetes)
-
-saveRDS(log_fit_3, file = "log_fit_3.rds")
-
-
 
 ```
 
