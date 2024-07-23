@@ -132,20 +132,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This data set represents predictors of Diabetes. This data set represents 253,680 survey responses to the CDC’s Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The data set is unbalanced, meaning that there are more observations taking on the value of no diabetes vs.&nbsp;diabetes or prediabetes.</p>
-<p>The purpose of the EDA that follows is to both visually and numerically explore the relationship of variables to the target variable - the presence of diabetes. Below, I will use bar plots for categorical variables and density plots or box plots for continuous variables to visually see differences. I will also compare means and medians for continuous variables for those with and without diabetes. For categorical variables, I will calculate and compare the percentage of those that have the predictor variable in those that either have or do not have diabetes.</p>
-<p>The ultimate goal of modeling is to find the best predictive model (logistic regression, classification tree, and random forest) that can be used in the prediction of the diagnosis of Diabetes. This is beneficial because Diabetes is a very prevalent chronic disease. By using a predictive model, we could potentially provide earlier diagnosis and/or monitor patients that have a higher likelihood of developing Diabetes due to certain risk factors.</p>
-<p>Based on the EDA that follows, I have identified 5 significant predictors: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking. Information on the target variable and the predictor variables is below.</p>
+<p>This data set represents predictors of diabetes. This data set represents 253,680 survey responses to the CDC’s Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The data set is unbalanced, meaning that there are more observations taking on the value of no diabetes vs.&nbsp;diabetes or prediabetes.</p>
+<p>The purpose of the EDA that follows is to both visually and numerically explore the relationship of variables to the target variable - the presence of diabetes. Below, I will use bar plots for categorical variables and density plots or box plots for continuous variables to visually see differences. I will also compare means and medians for continuous variables for those with and without diabetes. For categorical variables, I will calculate and compare the percentage of those with each level of the predictor variable in those that either have or do not have diabetes.</p>
+<p>The ultimate goal of modeling is to find the best predictive model (logistic regression, classification tree, and random forest) that can be used in the prediction of the diagnosis of diabetes. This is beneficial because diabetes is a very prevalent chronic disease. By using a predictive model, we could potentially provide earlier diagnosis and/or monitor patients that have a higher likelihood of developing diabetes due to certain risk factors.</p>
+<p>Based on the EDA that follows, I have identified 5 significant predictors: high blood pressure, high cholesterol, heart disease or attack, general health rating, and difficulty walking. Information on the target variable and the predictor variables is below.</p>
 <p>The Diabetes_binary column takes on 2 values: 0 for no diabetes and 1 for prediabetes or diabetes.</p>
 <p>The HighBP column takes on 2 values: 0 for no high blood pressure and 1 for high blood pressure.</p>
 <p>The HighChol column takes on 2 values: 0 for no high cholesterol and 1 for high cholesterol.</p>
-<p>The HeartDiseaseorAttack column takes on 2 values: 0 if no coronary heart disease or myocardial infarction and 1 if have coronary heart disease or myocardial infarction.</p>
+<p>The HeartDiseaseorAttack column takes on 2 values: 0 if no coronary heart disease or myocardial infarction and 1 if have or have had coronary heart disease or myocardial infarction.</p>
 <p>The GenHlth column takes on 5 values based on rating of general health: 1 is excellent, 2 is very good, 3 good, 4 is fair, and 5 is poor.</p>
 <p>The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or walking and 1 if difficulty climbing stairs or walking.</p>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
-<p>In this section, I will read in the data set and convert all appropriate variables to factors with relevant level names.</p>
+<p>In this section, I will read in the data set using a relative path and convert all appropriate variables to factors with relevant level names. I will also check on missingness and there are no missing values in this dataset.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>diabetes_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"diabetes_binary_health_indicators_BRFSS2015.csv"</span>)</span>
@@ -235,20 +235,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="summarizations" class="level1">
 <h1>Summarizations</h1>
-<p>Here I will create graphical and numerical summaries on the variables above. Based on the summaries that follow, I have determined the most important variables in their relationship with Diabetes are: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking.</p>
+<p>Here I will create graphical and numerical summaries on the variables above. Based on the summaries that follow, I have determined the most important variables in their relationship with diabetes are: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking.</p>
 <section id="high-blood-pressure-summary" class="level3">
 <h3 class="anchored" data-anchor-id="high-blood-pressure-summary">High Blood Pressure Summary</h3>
 <p>Of those without diabetes, 37.7% have high blood pressure. Of those with diabetes, 75.3% have high blood pressure. This does appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with HighBP</span></span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with high blood pressure</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> HighBP)) <span class="sc">+</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with HBP.</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with high blood pressure.</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people with HBP in each category and divide by the total count.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people with high blood pressure in each category and divide by the total count.</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>hbp_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Diabetes_binary) <span class="sc">|&gt;</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
@@ -268,17 +268,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="high-cholesterol-summary" class="level3">
 <h3 class="anchored" data-anchor-id="high-cholesterol-summary">High Cholesterol Summary</h3>
-<p>Of those without diabetes, 38.4% have high blood pressure. Of those with diabetes, 67% have high cholesterol. This does appear to be a significant predictor.</p>
+<p>Of those without diabetes, 38.4% have high cholesterol. Of those with diabetes, 67% have high cholesterol. This does appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with HighChol</span></span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with high cholesterol.</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> HighChol)) <span class="sc">+</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with high cholesterol.</span></span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with high cholesterol.</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people with High Cholesterol in each category and divide by the total count.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people with high cholesterol in each category and divide by the total count.</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>high_chol_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Diabetes_binary) <span class="sc">|&gt;</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
@@ -300,13 +300,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="cholesterol-check-summary">Cholesterol Check Summary</h3>
 <p>Of those without diabetes, 95.8% have had a cholesterol check in the last five years. Of those with diabetes, 99.3% have had a cholesterol check. This does NOT appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Cholesterol Check.</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with cholesterol check.</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> CholCheck)) <span class="sc">+</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with Cholesterol Check.</span></span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with cholesterol check.</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people having a cholesterol check in each category and divide by the total count.</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>chol_check_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -336,7 +336,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with BMI. </span></span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with BMI. </span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Find the mean and median BMI in those with and without diabetes.</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>bmi_numeric <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -359,13 +359,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="smoker-summary">Smoker Summary</h3>
 <p>Of those without diabetes, 43.1% smoke. Of those with diabetes, 51.8% smoke. This does NOT appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Smoker status</span></span>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with smoker status</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> Smoker)) <span class="sc">+</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with Smoker status. </span></span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with smoker status. </span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people who smoke in each category and divide by the total count.</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>smoker_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -389,13 +389,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="stroke-summary">Stroke Summary</h3>
 <p>Of those without diabetes, 3.22% have had a stroke. Of those with diabetes, 9.25% have had a stroke. This does NOT appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Incidence of Stroke</span></span>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with incidence of stroke</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> Stroke)) <span class="sc">+</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with incidence of stroke. </span></span>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with incidence of stroke. </span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people who have had a stroke in each category and divide by the total count.</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>stroke_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -419,13 +419,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="heart-disease-or-attack-summary">Heart Disease or Attack Summary</h3>
 <p>Of those without diabetes, 7.34% have heart disease or have had a heart attack. Of those with diabetes, 22.3% have heart disease or have had a heart attack. This does appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Heart Disease or Attack</span></span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with heart Disease or attack</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> HeartDiseaseorAttack)) <span class="sc">+</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with incidence of heart disease or attack. </span></span>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with incidence of heart disease or attack. </span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people who have heart disease or attack in each category and divide by the total count.</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>hd_or_attack_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -449,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="physical-activity-summary">Physical Activity Summary</h3>
 <p>Of those without diabetes, 77.7% have exercised in the last 30 days outside of their job. Of those with diabetes, 63.1% have exercised in the last 30 days outside of their job. This does NOT appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Physical Activity</span></span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with physical activity</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> PhysActivity)) <span class="sc">+</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -479,22 +479,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="fruits-summary">Fruits Summary</h3>
 <p>Of those without diabetes, 64.2% eat fruit at least once per day. Of those with diabetes, 58.5% eat fruit at least once per day. This does NOT appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Fruits</span></span>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with fruits</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> Fruits)) <span class="sc">+</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary with fruits. #Group by having diabetes or not having diabetes.</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people who eat fruit each day in each category and divide by the total count.</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>fruit_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Diabetes_binary) <span class="sc">|&gt;</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">fruit_count =</span> <span class="fu">sum</span>(Fruits <span class="sc">==</span> <span class="st">"fruits"</span>),</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fruit_percent =</span> (fruit_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>fruit_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary with fruits. </span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people who eat fruit each day in each category and divide by the total count.</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>fruit_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Diabetes_binary) <span class="sc">|&gt;</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fruit_count =</span> <span class="fu">sum</span>(Fruits <span class="sc">==</span> <span class="st">"fruits"</span>),</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_count =</span> <span class="fu">n</span>(),</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fruit_percent =</span> (fruit_count <span class="sc">/</span> total_count) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>fruit_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 4
   Diabetes_binary fruit_count total_count fruit_percent
@@ -508,7 +509,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="veggies-summary">Veggies Summary</h3>
 <p>Of those without diabetes, 82% eat vegetables at least once per day. Of those with diabetes, 75.6% eat vegetables at least once per day. This does NOT appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Veggies</span></span>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with veggies</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> Veggies)) <span class="sc">+</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -538,7 +539,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="heavy-alcohol-consumption-summary">Heavy Alcohol Consumption Summary</h3>
 <p>Of those without diabetes, 6.15% drink at least 14 drinks per week (male) or at least 7 drinks per week (female). Of those with diabetes, 2.35% drink at least 14 drinks per week (male) or at least 7 drinks per week (female). This does not appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Heavy Alcohol Consumption</span></span>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with heavy alcohol consumption</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> HvyAlcoholConsump)) <span class="sc">+</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -564,11 +565,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="healthcare-summary" class="level3">
-<h3 class="anchored" data-anchor-id="healthcare-summary">Healthcare Summary</h3>
-<p>Of those without diabetes, 95% have health coverage. Of those with diabetes, 96% have health coverage. This does NOT appear to be a significant predictor.</p>
+<section id="healthcare-coverage-summary" class="level3">
+<h3 class="anchored" data-anchor-id="healthcare-coverage-summary">Healthcare Coverage Summary</h3>
+<p>Of those without diabetes, 95% have healthcare coverage. Of those with diabetes, 96% have healthcare coverage. This does NOT appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Healthcare</span></span>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with healthcare</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> AnyHealthcare)) <span class="sc">+</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -598,13 +599,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="avoiding-doctor-due-to-cost-summary">Avoiding Doctor due to Cost Summary</h3>
 <p>Of those without diabetes, 8.07% have avoided the doctor because of cost. Of those with diabetes, 10.6% have avoided the doctor because of cost. This does not appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with No Doctor because Cost</span></span>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with no doctor due to cost</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> NoDocbcCost)) <span class="sc">+</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with No Doctor because cost.</span></span>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with no doctor due to cost.</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people with a cost issue in each category and divide by the total count.</span></span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>doc_cost_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -626,15 +627,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="general-health-rating-summary" class="level3">
 <h3 class="anchored" data-anchor-id="general-health-rating-summary">General Health Rating Summary</h3>
-<p>Of those without diabetes, 20.2% rate their general health as excellent. Of those with diabetes, 3.22% rate their general health as excellent. Of those without diabetes, 37.9% rate their general health as very good. Of those with diabetes, 18.1% rate their general health as very good. Of those without diabetes, 28.5% rate their general health as good. Of those with diabetes, 28.1% rate their general health as good. Of those without diabetes, 9.98% rate their general health as fair. Of those with diabetes, 27.7% rate their general health as fair. Of those without diabetes, 3.4% rate their general health as poor. Of those with diabetes, 12.95% rate their general health as excellent. This does appear to be a significant predictor.</p>
+<p>Of those without diabetes, 20.2% rate their general health as excellent. Of those with diabetes, 3.23% rate their general health as excellent. Of those without diabetes, 37.9% rate their general health as very good. Of those with diabetes, 18.1% rate their general health as very good. Of those without diabetes, 28.5% rate their general health as good. Of those with diabetes, 28.1% rate their general health as good. Of those without diabetes, 9.98% rate their general health as fair. Of those with diabetes, 27.7% rate their general health as fair. Of those without diabetes, 3.4% rate their general health as poor. Of those with diabetes, 12.95% rate their general health as excellent. This does appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with General Health</span></span>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with General Health</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> GenHlth)) <span class="sc">+</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with General Health Rating</span></span>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with General Health Rating</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people with each level of general health rating (excellent to poor) in each category and divide by the total count.</span></span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>general_health_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -667,9 +668,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="mental-health-days-summary" class="level3">
 <h3 class="anchored" data-anchor-id="mental-health-days-summary">Mental Health Days Summary</h3>
-<p>Of those without diabetes, they have an average of 2.97 bad mental health days per month. Of those with diabetes, they have an average of 4.46 bad mental health days per month. This does not appear to be a significant predictor.</p>
+<p>Of those without diabetes, they have an average of 2.98 bad mental health days per month. Of those with diabetes, they have an average of 4.46 bad mental health days per month. This does not appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Mental Health Days</span></span>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Mental health days</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> MentHlth, <span class="at">fill =</span> Diabetes_binary)) <span class="sc">+</span></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -704,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric Summary for Physical Illness or Injury or Last 30 Days</span></span>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric Summary for physical illness or injury for last 30 days</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Find the mean and median days of physical illness and injury in the last 30 days in those with and without diabetes.</span></span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>phys_health_num <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -727,13 +728,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="difficulty-walking-summary">Difficulty Walking Summary</h3>
 <p>Of those without diabetes, 13.5% have difficulty walking. Of those with diabetes, 37.1% have difficulty walking. This does appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Difficulty Walking</span></span>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with difficulty walking</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> DiffWalk)) <span class="sc">+</span></span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with Difficulty Walking.</span></span>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with difficulty walking.</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people with difficulty walking in each category and divide by the total count.</span></span>
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>walking_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -757,13 +758,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="sex-summary">Sex Summary</h3>
 <p>Of those without diabetes, 56.6% are female. Of those with diabetes, 52.1% are female. This does not appear to be a significant predictor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Sex</span></span>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with Sex</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> Sex)) <span class="sc">+</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of Diabetes with Sex.</span></span>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric summary of diabetes with Sex.</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of females in each category and divide by the total count.</span></span>
 <span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>sex_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -787,13 +788,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="education-summary">Education Summary</h3>
 <p>Of those without diabetes, 0.06% have no education. Of those with diabetes, 0.13% have no education. Of those without diabetes, 1.3% have an elementary education. Of those with diabetes, 3.3% have an elementary education. Of those without diabetes, 3.3% have some high school education. Of those with diabetes, 6.5% have some high school education. Of those without diabetes, 23.7% have a high school education. Of those with diabetes, 31.3% have a high school education. Of those without diabetes, 27.3% have some college education. Of those with diabetes, 29.3% have some college education. Of those without diabetes, 44.4% have completed a college education. Of those with diabetes, 29.4% have completed a college education.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Education</span></span>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with education</span></span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> Education)) <span class="sc">+</span></span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric Summary of Diabetes with Education</span></span>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric Summary of diabetes with education</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people in each category of education (none - college graduate) in those with and without diabetes and divide by the total count.</span></span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>edu_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>
@@ -829,15 +830,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="income-summary" class="level3">
 <h3 class="anchored" data-anchor-id="income-summary">Income Summary</h3>
-<p>Of those without diabetes, 3.4% make less than 10,000 dollars per year. Of those with diabetes, 6.7% make less than 10,000 dollars per year. Of those without diabetes, 3.98% make between10,000 and 15,000 dollars per year. Of those with diabetes, 6.73% make between 10,000 and 15,000 dollars per year. Of those without diabetes, 5.7% make between 15,000 and 20,000 dollars per year. Of those with diabetes, 10.1% make between 15,000 and 20,000 dollars per year. Of those without diabetes, 7.4% make between 20,000 and 25,000 dollars per year. Of those with diabetes, 11.5% make between 20,000 and 25,000 dollars per year. Of those without diabetes, 9.8% make between 25,000 and 35,000 dollars per year. Of those with diabetes, 12.7% make between 25,000 and 35,000 dollars per year. Of those without diabetes, 14.28% make between 35,000 and 50,000 dollars per year Of those with diabetes, 14.96% make between 35,000 and 50,000 dollars per year. Of those without diabetes, 17.4% make between 50,000 and 75,000 dollars per year Of those with diabetes, 14.9% make between 50,000 and 75,000 dollars per year. Of those without diabetes, 38.1% make more than 75,000 dollars per year. Of those with diabetes, 20.4% more than 75,000 dollars per year.</p>
+<p>Of those without diabetes, 3.4% make less than 10,000 dollars per year. Of those with diabetes, 6.7% make less than 10,000 dollars per year. Of those without diabetes, 3.98% make between 10,000 and 15,000 dollars per year. Of those with diabetes, 6.73% make between 10,000 and 15,000 dollars per year. Of those without diabetes, 5.7% make between 15,000 and 20,000 dollars per year. Of those with diabetes, 10.1% make between 15,000 and 20,000 dollars per year. Of those without diabetes, 7.4% make between 20,000 and 25,000 dollars per year. Of those with diabetes, 11.5% make between 20,000 and 25,000 dollars per year. Of those without diabetes, 9.8% make between 25,000 and 35,000 dollars per year. Of those with diabetes, 12.7% make between 25,000 and 35,000 dollars per year. Of those without diabetes, 14.28% make between 35,000 and 50,000 dollars per year Of those with diabetes, 14.96% make between 35,000 and 50,000 dollars per year. Of those without diabetes, 17.4% make between 50,000 and 75,000 dollars per year Of those with diabetes, 14.9% make between 50,000 and 75,000 dollars per year. Of those without diabetes, 38.1% make more than 75,000 dollars per year. Of those with diabetes, 20.4% more than 75,000 dollars per year.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of Diabetes with Income</span></span>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bar plot of diabetes with Income</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diabetes_data, <span class="fu">aes</span>(<span class="at">x =</span> Diabetes_binary, <span class="at">fill =</span> Income)) <span class="sc">+</span></span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="EDA_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric Summary of Diabetes with Income</span></span>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Numeric Summary of diabetes with Income</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Group by having diabetes or not having diabetes.</span></span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Count the number of people in each category of income (less than 10k - more than 75k) in those with and without diabetes and divide by the total count.</span></span>
 <span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>income_percent <span class="ot">&lt;-</span> diabetes_data <span class="sc">|&gt;</span></span>

@@ -6,11 +6,11 @@ author: "Taylor Cesarski"
 
 # Introduction
 
-The ultimate goal of modeling is to find the best predictive model (logistic regression, classification tree, and random forest) that can be used in the prediction of the diagnosis of Diabetes. This is beneficial because Diabetes is a very prevalent chronic disease. By using a predictive model, we could potentially provide earlier diagnosis and/or monitor patients that have a higher likelihood of developing Diabetes due to certain risk factors.
+The ultimate goal of modeling is to find the best predictive model (logistic regression, classification tree, and random forest) that can be used in the prediction of the diagnosis of diabetes. This is beneficial because diabetes is a very prevalent chronic disease. By using a predictive model, we could potentially provide earlier diagnosis and/or monitor patients that have a higher likelihood of developing diabetes due to certain risk factors. We want to be able to predict the likelihood of diabetes given someone has high blood pressure, high cholesterol, and other risk factors.
 
-Based on the previous EDA, I have identified 5 significant predictors: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking. Information on the target variable and the predictor variables is below.
+Based on the previous EDA, I have identified 5 significant predictors: high blood pressure, high cholesterol, heart disease or attack, general health rating, and difficulty walking. Information on the target variable and the predictor variables is below.
 
-The Diabetes_binary column takes on 3 values: 0 for no diabetes, 1 for prediabetes or diabetes.
+The Diabetes_binary column takes on 2 values: 0 for no diabetes, 1 for prediabetes or diabetes.
 
 The HighBP column takes on 2 values: 0 for no high blood pressure and 1 for high blood pressure.
 
@@ -23,12 +23,13 @@ The GenHlth column takes on 5 values based on rating of general health: 1 is exc
 The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or walking and 1 if difficulty climbing stairs or walking.
 
 # logLoss
-log loss is calculated using the following formula:
+logLoss is calculated using the following formula:
 ![Log Loss Formula](logloss.png)
 
-When trying to classify, the model first predicts the probability of success. If the probability of success is greater than 0.5, it predicts success. If it is less than 0.5, it predicts failure. Log loss takes into account how far the predicted probability is to the true value (0 or 1). If there is a greater difference between the predicted value and the actual value, then the value of the logLoss will be higher. The log loss value for each individual observation is calculated using the formula above (what is inside the summation). Then the average of the log loss score is determined to get the overall log loss score for the model. A lower log loss score indicates a better fit. If the log loss score is 0, it shows that the predicted probabilities match the true outcomes perfectly. The values of logLoss can range from 0 to infinity. The benefits of log loss is that it not only accounts for accuracy, but also confidence in predictions. In classification, we can use the accuracy metric which is just correct predictions/total predictions. However, this does not give any information about any incorrect predictions being made. By using logloss instead, we take into account both the accuracy and the confidence in predictions. 
+When trying to classify, the model first predicts the probability of success. If the probability of success is greater than 0.5, it predicts success. If it is less than 0.5, it predicts failure. logLoss takes into account how far the predicted probability is to the true value (0 or 1). If there is a greater difference between the predicted value and the actual value, then the value of the logLoss will be higher. The logLoss value for each individual observation is calculated using the formula above (what is inside the summation). Then the average of the logLoss score is determined to get the overall logLoss score for the model. A lower logLoss score indicates a better fit. If the logLoss score is 0, it shows that the predicted probabilities match the true outcomes perfectly. The values of logLoss can range from 0 to infinity. The benefits of logLoss is that it not only accounts for accuracy, but also confidence in predictions. In classification, we can use the accuracy metric which is just correct predictions/total predictions. However, this does not give any information about any incorrect predictions being made. By using logLoss instead, we take into account both the accuracy and the confidence in predictions. 
 
 # Read in data
+In this section we will read in the data again and convert relevant variables that will be used in the model to factors.
 ```{r, message = FALSE, warning= FALSE}
 library(tidyverse)
 diabetes_data <- read_csv("diabetes_binary_health_indicators_BRFSS2015.csv")
@@ -39,37 +40,11 @@ diabetes_data$HighBP <- factor(diabetes_data$HighBP, levels = c(0, 1), labels = 
 
 diabetes_data$HighChol <- factor(diabetes_data$HighChol, levels = c(0, 1), labels = c("no_high_chol", "high_chol"))
 
-diabetes_data$CholCheck <- factor(diabetes_data$CholCheck, levels = c(0, 1), labels = c("no_chol_check", "chol_check"))
-
-diabetes_data$Smoker <- factor(diabetes_data$Smoker, levels = c(0, 1), labels = c("non_smoker", "smoker"))
-
-diabetes_data$Stroke <- factor(diabetes_data$Stroke, levels = c(0, 1), labels = c("no_stroke", "stroke"))
-
 diabetes_data$HeartDiseaseorAttack <- factor(diabetes_data$HeartDiseaseorAttack, levels = c(0, 1), labels = c("no_hd_or_attack", "hd_or_attack"))
-
-diabetes_data$PhysActivity <- factor(diabetes_data$PhysActivity, levels = c(0, 1), labels = c("no_activity", "activity"))
-
-diabetes_data$Fruits <- factor(diabetes_data$Fruits, levels = c(0, 1), labels = c("no_fruits", "fruits"))
-
-diabetes_data$Veggies <- factor(diabetes_data$Veggies, levels = c(0, 1), labels = c("no_veggies", "veggies"))
-
-diabetes_data$HvyAlcoholConsump <- factor(diabetes_data$HvyAlcoholConsump, levels = c(0, 1), labels = c("no_heavy_alc", "heavy_alc"))
-
-diabetes_data$AnyHealthcare <- factor(diabetes_data$AnyHealthcare, levels = c(0, 1), labels = c("no_healthcare", "healthcare"))
-
-diabetes_data$NoDocbcCost <- factor(diabetes_data$NoDocbcCost, levels = c(0, 1), labels = c("no_cost_issue", "cost_issue"))
 
 diabetes_data$GenHlth <- factor(diabetes_data$GenHlth, levels = c(1, 2, 3, 4, 5), labels = c("excellent", "very_good", "good", "fair", "poor"))
 
 diabetes_data$DiffWalk <- factor(diabetes_data$DiffWalk, levels = c(0, 1), labels = c("no_difficulty", "difficulty"))
-
-diabetes_data$Sex <- factor(diabetes_data$Sex, levels = c(0, 1), labels = c("female", "male"))
-
-diabetes_data$Age <- factor(diabetes_data$Age, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13), labels = c("18_24", "25_29", "30_34", "35_39", "40_44", "45_49", "50_54", "55_59", "60_64", "65_69", "70_74", "75_79", "80_or_more"))
-
-diabetes_data$Education <- factor(diabetes_data$Education, levels = c(1, 2, 3, 4, 5, 6), labels = c("none", "elementary", "some_hs", "high_school", "some_college", "college_grad"))
-
-diabetes_data$Income <- factor(diabetes_data$Income, levels = c(1, 2, 3, 4, 5, 6, 7, 8), labels = c("less_10k", "10k_15k", "15k_20k", "20k_25k", "25k_35k", "35k_50k", "50k_75k", "more_75k"))
 ```
 
 
@@ -90,7 +65,7 @@ diabetes_test <- diabetes_data[-trainIndex, ]
 
 # Logistic Regression Models
 
-A logistic regression model is a generalized linear model that has a response that is a success/failure. In this case, 0 represents "failure" which is no diabetes and 1 represents success which is diabetes or prediabetes. A logistic model uses a logit link (or log(odds)) to connect the average response with a linear function in the parameters.
+A logistic regression model is a generalized linear model that has a response which is a success/failure. In this case, 0 represents "failure" which is no diabetes and 1 represents success which is diabetes or prediabetes. A logistic model uses a logit link (or log(odds)) to connect the average response with a linear function in the parameters.
 
 ### Logistic Model #1
 Use all chosen predictors as main effect terms.
@@ -120,6 +95,7 @@ log_fit_1
 ```
 
 ### Logistic Model #2
+Use all chosen predictors as main effect terms and an interaction between High Blood Pressure and High Cholesterol.
 ```{r}
 #Set the seed for reproducibility.
 set.seed(50)
@@ -128,7 +104,7 @@ trctrl <- trainControl(method = "cv",
                        number = 5, 
                        classProbs = TRUE, 
                        summaryFunction = mnLogLoss)
-#Train the first logistic model using all 5 main effect terms and an interaction between High Blood Pressure & High Cholesterol.
+#Train the second logistic model using all 5 main effect terms and an interaction between High Blood Pressure & High Cholesterol.
 #Use the training data set.
 #The method is glm (generalized linear model) with family as binomial to fit logistic.
 #Preprocess the data by centering and scaling.
@@ -145,6 +121,7 @@ log_fit_2
 ```
 
 ### Logistic Model #3
+Use all chosen predictors as main effect terms, an interaction term between High Cholesterol and Heart Disease or Attack, and an interaction between General Health and Difficulty Walking.
 ```{r}
 #Set the seed for reproducibility.
 set.seed(50)
@@ -154,7 +131,7 @@ trctrl <- trainControl(method = "cv",
                        classProbs = TRUE, 
                        summaryFunction = mnLogLoss)
 
-#Train the first logistic model using all 5 main effect terms and interaction terms between High Cholesterol and Heart Disease/Attack and an interaction between General Health and Difficulty Walking.
+#Train the third logistic model using all 5 main effect terms and interaction terms between High Cholesterol and Heart Disease/Attack and an interaction between General Health and Difficulty Walking.
 #Use the training data set.
 #The method is glm (generalized linear model) with family as binomial to fit logistic.
 #Preprocess the data by centering and scaling.
@@ -176,7 +153,7 @@ Based on the three previous logistic models, Logistic Model #3 appears to be the
 
 # Classification Tree
 
-A classification tree is the idea of splitting up the predictor space into regions and having different predictions for each region. For a classification tree specifically, the goal is to predict group membership - no diabetes, or prediabetes/diabetes in this case. We will use the most prevalent class to predict. This method is very easy to understand, we don't need to include interaction terms, we don't need to scale, and we don't need to utilize statistical assumptions.
+A classification tree is the idea of splitting up the predictor space into regions and having different predictions for each region. For a classification tree specifically, the goal is to predict group membership - no diabetes, or prediabetes/diabetes in this case. We will use the most prevalent class to predict. This method is very easy to understand, we don't need to include interaction terms, we don't need to scale, and we don't need to utilize statistical assumptions. There are some downsides to classification trees however including the use of a greedy algorithm that only looks one step ahead, a small change in the data drastically changing the tree, and they generally need to be pruned.
 
 ```{r}
 #Set seed for reproducibility.
@@ -200,12 +177,12 @@ class_tree_diabetes <- train(Diabetes_binary ~ HighBP + HighChol + HeartDiseaseo
                     metric = "logLoss",
                     trControl = trctrl,
                     tuneGrid = tune_parameter)
-#Print out information about the model. The optimal model has a logLoss of 0.3602.
+#Print out information about the model. The optimal model has a logLoss of 0.3602 with teh optimal complexity parameter being 0.
 class_tree_diabetes
 ```
 # Random Forest
 
-A random forest extends the idea of bootstrap aggregation, but uses a random subset of predictors rather than all predictors. It can reduce the variance in comparison to a basic classification tree because you are averaging across trees.
+A random forest extends the idea of bootstrap aggregation, but uses a random subset of predictors rather than all predictors. It can reduce the variance in comparison to a basic classification tree because you are averaging across trees. However, after running this model multiple times both with and without the use of the caret package, it appears that a random forest model may not be the best fit for this dataset using a logloss metric. This is because the class probabilities get driven *very* close to 0 or *very* close to 1 in comparison to other models. Therefore the logLoss is much higher than that of the other models. 
 ```{r}
 #Set seed for reproducibility.
 set.seed(50)
@@ -216,8 +193,7 @@ trctrl <- trainControl(method = "cv",
                        summaryFunction = mnLogLoss)
 #Create a random forest model using predictors determined by EDA.
 #Use rf for the method.
-#Use the train control defined above (5 fold cross validation) and the tuneGrid from 1 to 5 because there are five predictors.
-
+#Use the train control defined above (5 fold cross validation) and the tuneGrid of mtry from 1 to 5 because there are five predictors.
 rf_model_diabetes <- train(Diabetes_binary ~ HighBP + HighChol + HeartDiseaseorAttack + GenHlth + DiffWalk,
                     data = diabetes_train,
                     method = "rf",
@@ -229,9 +205,9 @@ rf_model_diabetes
 ```
 
 # Final Model Selection
-We will compare all three models on the test set. Based on the test set, it appears that the logistic regression is the best model. On the test set, the logistic model has a log loss of , the classification tree has a logLoss of , and the random forest model has a logLoss of infinity.
+We will compare all three models on the test set. Based on the test set, it appears that the logistic regression is the best model. On the test set, the logistic model has a logLoss of 0.3333, the classification tree has a logLoss of 0.3603, and the random forest model has a logLoss of infinity.
 
-```{r}
+```{r, message = FALSE, warning=FALSE}
 #Logistic Model
 library(Metrics)
 #Get actual values. Converts to 1 & 2 so subtract 1 to get 0 and 1.

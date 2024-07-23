@@ -6,13 +6,13 @@ author: "Taylor Cesarski"
 
 # Introduction
 
-This data set represents predictors of Diabetes. This data set represents 253,680 survey responses to the CDC's Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The data set is unbalanced, meaning that there are more observations taking on the value of no diabetes vs. diabetes or prediabetes.
+This data set represents predictors of diabetes. This data set represents 253,680 survey responses to the CDC's Behavioral Risk Factor Surveillance System (BRFSS) survey administered in 2015. The target variable (Diabetes_binary) takes on two values: 0 if no diabetes and 1 for diabetes or prediabetes. The data set is unbalanced, meaning that there are more observations taking on the value of no diabetes vs. diabetes or prediabetes.
 
-The purpose of the EDA that follows is to both visually and numerically explore the relationship of variables to the target variable - the presence of diabetes. Below, I will use bar plots for categorical variables and density plots or box plots for continuous variables to visually see differences. I will also compare means and medians for continuous variables for those with and without diabetes. For categorical variables, I will calculate and compare the percentage of those that have the predictor variable in those that either have or do not have diabetes.
+The purpose of the EDA that follows is to both visually and numerically explore the relationship of variables to the target variable - the presence of diabetes. Below, I will use bar plots for categorical variables and density plots or box plots for continuous variables to visually see differences. I will also compare means and medians for continuous variables for those with and without diabetes. For categorical variables, I will calculate and compare the percentage of those with each level of the predictor variable in those that either have or do not have diabetes.
 
-The ultimate goal of modeling is to find the best predictive model (logistic regression, classification tree, and random forest) that can be used in the prediction of the diagnosis of Diabetes. This is beneficial because Diabetes is a very prevalent chronic disease. By using a predictive model, we could potentially provide earlier diagnosis and/or monitor patients that have a higher likelihood of developing Diabetes due to certain risk factors.
+The ultimate goal of modeling is to find the best predictive model (logistic regression, classification tree, and random forest) that can be used in the prediction of the diagnosis of diabetes. This is beneficial because diabetes is a very prevalent chronic disease. By using a predictive model, we could potentially provide earlier diagnosis and/or monitor patients that have a higher likelihood of developing diabetes due to certain risk factors.
 
-Based on the EDA that follows, I have identified 5 significant predictors: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking. Information on the target variable and the predictor variables is below.
+Based on the EDA that follows, I have identified 5 significant predictors: high blood pressure, high cholesterol, heart disease or attack, general health rating, and difficulty walking. Information on the target variable and the predictor variables is below.
 
 The Diabetes_binary column takes on 2 values: 0 for no diabetes and 1 for prediabetes or diabetes.
 
@@ -20,15 +20,14 @@ The HighBP column takes on 2 values: 0 for no high blood pressure and 1 for high
 
 The HighChol column takes on 2 values: 0 for no high cholesterol and 1 for high cholesterol.
 
-The HeartDiseaseorAttack column takes on 2 values: 0 if no coronary heart disease or myocardial infarction and 1 if have coronary heart disease or myocardial infarction.
+The HeartDiseaseorAttack column takes on 2 values: 0 if no coronary heart disease or myocardial infarction and 1 if have or have had coronary heart disease or myocardial infarction.
 
 The GenHlth column takes on 5 values based on rating of general health: 1 is excellent, 2 is very good, 3 good, 4 is fair, and 5 is poor.
 
 The DiffWalk column takes on 2 values: 0 if no difficulty climbing stairs or walking and 1 if difficulty climbing stairs or walking.
 
-
 # Data
-In this section, I will read in the data set and convert all appropriate variables to factors with relevant level names.
+In this section, I will read in the data set using a relative path and convert all appropriate variables to factors with relevant level names. I will also check on missingness and there are no missing values in this dataset.
 ```{r, message = FALSE, warning = FALSE}
 library(tidyverse)
 diabetes_data <- read_csv("diabetes_binary_health_indicators_BRFSS2015.csv")
@@ -80,18 +79,18 @@ missing_vals
 
 ```
 # Summarizations
-Here I will create graphical and numerical summaries on the variables above. Based on the summaries that follow, I have determined the most important variables in their relationship with Diabetes are: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking.
+Here I will create graphical and numerical summaries on the variables above. Based on the summaries that follow, I have determined the most important variables in their relationship with diabetes are: High Blood Pressure, High Cholesterol, Heart Disease or Attack, General Health Rating, and Difficulty Walking.
 
 ### High Blood Pressure Summary
 Of those without diabetes, 37.7% have high blood pressure. Of those with diabetes, 75.3% have high blood pressure. This does appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with HighBP
+#Bar plot of diabetes with high blood pressure
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = HighBP)) +
   geom_bar()
 
-#Numeric summary of Diabetes with HBP.
+#Numeric summary of diabetes with high blood pressure.
 #Group by having diabetes or not having diabetes.
-#Count the number of people with HBP in each category and divide by the total count.
+#Count the number of people with high blood pressure in each category and divide by the total count.
 hbp_percent <- diabetes_data |>
   group_by(Diabetes_binary) |>
   summarize(
@@ -103,15 +102,15 @@ hbp_percent
 ```
 
 ### High Cholesterol Summary
-Of those without diabetes, 38.4% have high blood pressure. Of those with diabetes, 67% have high cholesterol. This does appear to be a significant predictor.
+Of those without diabetes, 38.4% have high cholesterol. Of those with diabetes, 67% have high cholesterol. This does appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with HighChol
+#Bar plot of diabetes with high cholesterol.
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = HighChol)) +
   geom_bar()
 
-#Numeric summary of Diabetes with high cholesterol.
+#Numeric summary of diabetes with high cholesterol.
 #Group by having diabetes or not having diabetes.
-#Count the number of people with High Cholesterol in each category and divide by the total count.
+#Count the number of people with high cholesterol in each category and divide by the total count.
 high_chol_percent <- diabetes_data |>
   group_by(Diabetes_binary) |>
   summarize(
@@ -125,11 +124,11 @@ high_chol_percent
 ### Cholesterol Check Summary
 Of those without diabetes, 95.8% have had a cholesterol check in the last five years. Of those with diabetes, 99.3% have had a cholesterol check. This does NOT appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Cholesterol Check.
+#Bar plot of diabetes with cholesterol check.
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = CholCheck)) +
   geom_bar()
 
-#Numeric summary of Diabetes with Cholesterol Check.
+#Numeric summary of diabetes with cholesterol check.
 #Group by having diabetes or not having diabetes.
 #Count the number of people having a cholesterol check in each category and divide by the total count.
 chol_check_percent <- diabetes_data |>
@@ -149,7 +148,7 @@ Of those without diabetes, the mean BMI is 27.8 and standard deviation of 6.3 Of
 ggplot(diabetes_data, aes(x = BMI, fill = Diabetes_binary)) +
   geom_density(alpha = 0.5)
 
-#Numeric summary of Diabetes with BMI. 
+#Numeric summary of diabetes with BMI. 
 #Group by having diabetes or not having diabetes.
 #Find the mean and median BMI in those with and without diabetes.
 bmi_numeric <- diabetes_data |>
@@ -164,11 +163,11 @@ bmi_numeric
 ### Smoker Summary
 Of those without diabetes, 43.1% smoke. Of those with diabetes, 51.8% smoke. This does NOT appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Smoker status
+#Bar plot of diabetes with smoker status
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = Smoker)) +
   geom_bar()
 
-#Numeric summary of Diabetes with Smoker status. 
+#Numeric summary of diabetes with smoker status. 
 #Group by having diabetes or not having diabetes.
 #Count the number of people who smoke in each category and divide by the total count.
 smoker_percent <- diabetes_data |>
@@ -184,11 +183,11 @@ smoker_percent
 ### Stroke Summary
 Of those without diabetes, 3.22% have had a stroke. Of those with diabetes, 9.25% have had a stroke. This does NOT appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Incidence of Stroke
+#Bar plot of diabetes with incidence of stroke
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = Stroke)) +
   geom_bar()
 
-#Numeric summary of Diabetes with incidence of stroke. 
+#Numeric summary of diabetes with incidence of stroke. 
 #Group by having diabetes or not having diabetes.
 #Count the number of people who have had a stroke in each category and divide by the total count.
 stroke_percent <- diabetes_data |>
@@ -204,11 +203,11 @@ stroke_percent
 ### Heart Disease or Attack Summary
 Of those without diabetes, 7.34% have heart disease or have had a heart attack. Of those with diabetes, 22.3% have heart disease or have had a heart attack. This does appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Heart Disease or Attack
+#Bar plot of diabetes with heart Disease or attack
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = HeartDiseaseorAttack)) +
   geom_bar()
 
-#Numeric summary of Diabetes with incidence of heart disease or attack. 
+#Numeric summary of diabetes with incidence of heart disease or attack. 
 #Group by having diabetes or not having diabetes.
 #Count the number of people who have heart disease or attack in each category and divide by the total count.
 hd_or_attack_percent <- diabetes_data |>
@@ -224,7 +223,7 @@ hd_or_attack_percent
 ### Physical Activity Summary  
 Of those without diabetes, 77.7% have exercised in the last 30 days outside of their job. Of those with diabetes, 63.1% have exercised in the last 30 days outside of their job. This does NOT appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Physical Activity
+#Bar plot of diabetes with physical activity
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = PhysActivity)) +
   geom_bar()
 
@@ -245,11 +244,12 @@ activity_percent
 ### Fruits Summary
 Of those without diabetes, 64.2% eat fruit at least once per day. Of those with diabetes, 58.5% eat fruit at least once per day. This does NOT appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Fruits
+#Bar plot of diabetes with fruits
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = Fruits)) +
   geom_bar()
 
-#Numeric summary with fruits. #Group by having diabetes or not having diabetes.
+#Numeric summary with fruits. 
+#Group by having diabetes or not having diabetes.
 #Count the number of people who eat fruit each day in each category and divide by the total count.
 fruit_percent <- diabetes_data |>
   group_by(Diabetes_binary) |>
@@ -264,7 +264,7 @@ fruit_percent
 ### Veggies Summary
 Of those without diabetes, 82% eat vegetables at least once per day. Of those with diabetes, 75.6% eat vegetables at least once per day. This does NOT appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Veggies
+#Bar plot of diabetes with veggies
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = Veggies)) +
   geom_bar()
 
@@ -284,7 +284,7 @@ veggies_percent
 ### Heavy Alcohol Consumption Summary
 Of those without diabetes, 6.15% drink at least 14 drinks per week (male) or at least 7 drinks per week (female). Of those with diabetes, 2.35% drink at least 14 drinks per week (male) or at least 7 drinks per week (female). This does not appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Heavy Alcohol Consumption
+#Bar plot of diabetes with heavy alcohol consumption
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = HvyAlcoholConsump)) +
   geom_bar()
 
@@ -301,10 +301,10 @@ alcohol_percent <- diabetes_data |>
 alcohol_percent
 ```
 
-### Healthcare  Summary
-Of those without diabetes, 95% have health coverage. Of those with diabetes, 96% have health coverage. This does NOT appear to be a significant predictor.
+### Healthcare Coverage Summary
+Of those without diabetes, 95% have healthcare coverage. Of those with diabetes, 96% have healthcare coverage. This does NOT appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Healthcare
+#Bar plot of diabetes with healthcare
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = AnyHealthcare)) +
   geom_bar()
 
@@ -324,11 +324,11 @@ healthcare_percent
 ### Avoiding Doctor due to Cost Summary
 Of those without diabetes, 8.07% have avoided the doctor because of cost. Of those with diabetes, 10.6% have avoided the doctor because of cost. This does not appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with No Doctor because Cost
+#Bar plot of diabetes with no doctor due to cost
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = NoDocbcCost)) +
   geom_bar()
 
-#Numeric summary of Diabetes with No Doctor because cost.
+#Numeric summary of diabetes with no doctor due to cost.
 #Group by having diabetes or not having diabetes.
 #Count the number of people with a cost issue in each category and divide by the total count.
 doc_cost_percent <- diabetes_data |>
@@ -342,13 +342,13 @@ doc_cost_percent
 ```
 
 ### General Health Rating Summary
-Of those without diabetes, 20.2% rate their general health as excellent. Of those with diabetes, 3.22% rate their general health as excellent. Of those without diabetes, 37.9% rate their general health as very good. Of those with diabetes, 18.1% rate their general health as very good. Of those without diabetes, 28.5% rate their general health as good. Of those with diabetes, 28.1% rate their general health as good. Of those without diabetes, 9.98% rate their general health as fair. Of those with diabetes, 27.7% rate their general health as fair. Of those without diabetes, 3.4% rate their general health as poor. Of those with diabetes, 12.95% rate their general health as excellent. This does appear to be a significant predictor.
+Of those without diabetes, 20.2% rate their general health as excellent. Of those with diabetes, 3.23% rate their general health as excellent. Of those without diabetes, 37.9% rate their general health as very good. Of those with diabetes, 18.1% rate their general health as very good. Of those without diabetes, 28.5% rate their general health as good. Of those with diabetes, 28.1% rate their general health as good. Of those without diabetes, 9.98% rate their general health as fair. Of those with diabetes, 27.7% rate their general health as fair. Of those without diabetes, 3.4% rate their general health as poor. Of those with diabetes, 12.95% rate their general health as excellent. This does appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with General Health
+#Bar plot of diabetes with General Health
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = GenHlth)) +
   geom_bar()
 
-#Numeric summary of Diabetes with General Health Rating
+#Numeric summary of diabetes with General Health Rating
 #Group by having diabetes or not having diabetes.
 #Count the number of people with each level of general health rating (excellent to poor) in each category and divide by the total count.
 general_health_percent <- diabetes_data |>
@@ -370,9 +370,9 @@ general_health_percent
 ```
 
 ### Mental Health Days Summary
-Of those without diabetes, they have an average of 2.97 bad mental health days per month. Of those with diabetes, they have an average of 4.46 bad mental health days per month. This does not appear to be a significant predictor.
+Of those without diabetes, they have an average of 2.98 bad mental health days per month. Of those with diabetes, they have an average of 4.46 bad mental health days per month. This does not appear to be a significant predictor.
 ```{r}
-#Mental Health Days
+#Mental health days
 ggplot(diabetes_data, aes(x = MentHlth, fill = Diabetes_binary)) +
   geom_boxplot()
 
@@ -395,7 +395,7 @@ Of those without diabetes, they have an average of 3.64 days of physical illness
 ggplot(diabetes_data, aes(x = PhysHlth, fill = Diabetes_binary)) +
   geom_boxplot()
 
-#Numeric Summary for Physical Illness or Injury or Last 30 Days
+#Numeric Summary for physical illness or injury for last 30 days
 #Group by having diabetes or not having diabetes.
 #Find the mean and median days of physical illness and injury in the last 30 days in those with and without diabetes.
 phys_health_num <- diabetes_data |>
@@ -410,11 +410,11 @@ phys_health_num
 ### Difficulty Walking Summary
 Of those without diabetes, 13.5% have difficulty walking. Of those with diabetes, 37.1% have difficulty walking. This does appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Difficulty Walking
+#Bar plot of diabetes with difficulty walking
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = DiffWalk)) +
   geom_bar()
 
-#Numeric summary of Diabetes with Difficulty Walking.
+#Numeric summary of diabetes with difficulty walking.
 #Group by having diabetes or not having diabetes.
 #Count the number of people with difficulty walking in each category and divide by the total count.
 walking_percent <- diabetes_data |>
@@ -430,11 +430,11 @@ walking_percent
 ### Sex Summary
 Of those without diabetes, 56.6% are female. Of those with diabetes, 52.1% are female. This does not appear to be a significant predictor.
 ```{r}
-#Bar plot of Diabetes with Sex
+#Bar plot of diabetes with Sex
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = Sex)) +
   geom_bar()
 
-#Numeric summary of Diabetes with Sex.
+#Numeric summary of diabetes with Sex.
 #Group by having diabetes or not having diabetes.
 #Count the number of females in each category and divide by the total count.
 sex_percent <- diabetes_data |>
@@ -451,12 +451,12 @@ sex_percent
 Of those without diabetes, 0.06% have no education. Of those with diabetes, 0.13% have no education. Of those without diabetes, 1.3% have an elementary education. Of those with diabetes, 3.3% have an elementary education. Of those without diabetes, 3.3% have some high school education. Of those with diabetes, 6.5% have some high school education. Of those without diabetes, 23.7% have a high school education. Of those with diabetes, 31.3% have a high school education. Of those without diabetes, 27.3% have some college education. Of those with diabetes, 29.3% have some college education. Of those without diabetes, 44.4% have completed a college education. Of those with diabetes, 29.4% have completed a college education.
 
 ```{r}
-#Bar plot of Diabetes with Education
+#Bar plot of diabetes with education
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = Education)) +
   geom_bar()
 
 
-#Numeric Summary of Diabetes with Education
+#Numeric Summary of diabetes with education
 #Group by having diabetes or not having diabetes.
 #Count the number of people in each category of education (none - college graduate) in those with and without diabetes and divide by the total count.
 edu_percent <- diabetes_data |>
@@ -480,13 +480,13 @@ edu_percent
 ```
 
 ### Income Summary
-Of those without diabetes, 3.4% make less than 10,000 dollars per year. Of those with diabetes, 6.7% make less than 10,000 dollars per year. Of those without diabetes, 3.98% make between10,000 and 15,000 dollars per year. Of those with diabetes, 6.73% make between 10,000 and 15,000 dollars per year. Of those without diabetes, 5.7% make between 15,000 and 20,000 dollars per year. Of those with diabetes, 10.1% make between 15,000 and 20,000 dollars per year. Of those without diabetes, 7.4% make between 20,000 and 25,000 dollars per year. Of those with diabetes, 11.5% make between 20,000 and 25,000 dollars per year. Of those without diabetes, 9.8% make between 25,000 and 35,000 dollars per year. Of those with diabetes, 12.7% make between 25,000 and 35,000 dollars per year. Of those without diabetes, 14.28% make between 35,000 and 50,000 dollars per year Of those with diabetes, 14.96% make between 35,000 and 50,000 dollars per year. Of those without diabetes, 17.4% make between 50,000 and 75,000 dollars per year Of those with diabetes, 14.9% make between 50,000 and 75,000 dollars per year. Of those without diabetes, 38.1% make more than 75,000 dollars per year. Of those with diabetes, 20.4% more than 75,000 dollars per year. 
+Of those without diabetes, 3.4% make less than 10,000 dollars per year. Of those with diabetes, 6.7% make less than 10,000 dollars per year. Of those without diabetes, 3.98% make between 10,000 and 15,000 dollars per year. Of those with diabetes, 6.73% make between 10,000 and 15,000 dollars per year. Of those without diabetes, 5.7% make between 15,000 and 20,000 dollars per year. Of those with diabetes, 10.1% make between 15,000 and 20,000 dollars per year. Of those without diabetes, 7.4% make between 20,000 and 25,000 dollars per year. Of those with diabetes, 11.5% make between 20,000 and 25,000 dollars per year. Of those without diabetes, 9.8% make between 25,000 and 35,000 dollars per year. Of those with diabetes, 12.7% make between 25,000 and 35,000 dollars per year. Of those without diabetes, 14.28% make between 35,000 and 50,000 dollars per year Of those with diabetes, 14.96% make between 35,000 and 50,000 dollars per year. Of those without diabetes, 17.4% make between 50,000 and 75,000 dollars per year Of those with diabetes, 14.9% make between 50,000 and 75,000 dollars per year. Of those without diabetes, 38.1% make more than 75,000 dollars per year. Of those with diabetes, 20.4% more than 75,000 dollars per year. 
 ```{r}
-#Bar plot of Diabetes with Income
+#Bar plot of diabetes with Income
 ggplot(diabetes_data, aes(x = Diabetes_binary, fill = Income)) +
   geom_bar()
 
-#Numeric Summary of Diabetes with Income
+#Numeric Summary of diabetes with Income
 #Group by having diabetes or not having diabetes.
 #Count the number of people in each category of income (less than 10k - more than 75k) in those with and without diabetes and divide by the total count.
 income_percent <- diabetes_data |>
